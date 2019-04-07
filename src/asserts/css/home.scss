@@ -1,0 +1,308 @@
+@charset "utf-8";
+
+$main-width: 1000px;
+
+$card-width: 30%;
+
+$right-box-width: 68%;
+
+.ant-card-body {
+  padding: 0;
+}
+.main-container {
+  width: $main-width;
+  margin: 0 auto;
+  margin-top: 30px;
+  display: flex;
+  flex-direction: row;
+}
+
+.l_box {
+  width: $card-width;
+}
+
+//about me
+.aboutMe {
+  background: rgba(255, 255, 255, 0.5);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+.aboutMe .avatar {
+  width: 100px;
+  height: 100px;
+  position: relative;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.aboutMe .avatar img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+}
+
+.aboutMe .description {
+  display: flex;
+  flex-direction: column;
+  margin-top: 40px;
+  justify-content: center;
+  align-items: center;
+  line-height: 40px;
+  margin-bottom: 15px;
+}
+
+//文章分类
+.catagory {
+  background: rgba(255, 255, 255, 0.5);
+  margin-bottom: 20px;
+  overflow: hidden
+}
+
+.catagory h2 {
+  color: #333;
+  font-size: 14px;
+  line-height: 30px;
+  background: #fff;
+  text-align: center;
+}
+.catagory ul {
+  padding: 10px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+
+.catagory ul a {
+  display: block;
+  padding: 0 5px;
+  margin: 10px 10px 0 0;
+  line-height: 24px;
+  height: 24px;
+  background: #999;
+  border-radius: 8px;
+  color: #FFF;
+  font-size: 12px;
+  transition: all .5s;
+  -moz-transition: all .5s;
+  -webkit-transition: all .5s;
+  -o-transition: all .5s;
+}
+
+.catagory ul a:hover {
+  border-radius: 5px;
+  padding: 5px;
+  text-shadow: #000 3px 3px 3px
+}
+
+//最近文章
+.current-article {
+  background: rgba(255, 255, 255, 0.5);
+  margin-bottom: 20px;
+  overflow: hidden
+}
+
+.current-article h2 {
+  color: #333;
+  font-size: 14px;
+  line-height: 30px;
+  background: #fff;
+  text-align: center;
+}
+
+.current-article ul {
+  padding: 20px;
+}
+
+.current-article ul li {
+  white-space: nowrap;
+  text-overflow: ellipsis; //多处的内容省略
+  overflow: hidden;
+  margin-bottom: 5px;
+  background: url(../images/li.png) left center no-repeat;
+  padding-left: 20px
+}
+
+.current-article ul li:hover {
+  color: #fff;
+}
+
+//友情链接
+.flink {
+  background: rgba(255, 255, 255, 0.5);
+  margin-bottom: 20px;
+  overflow: hidden;
+}
+
+//h2是块级元素，所以设置background可以撑起来上面的小区域
+.flink h2 {
+  color: #333;
+  font-size: 14px;
+  line-height: 30px;
+  background: #fff;
+  text-align: center;
+}
+
+.flink ul {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 20px;
+}
+
+.flink ul li {
+  padding-left: 20px;
+  margin-bottom: 5px;
+  background: url("../images/li.png") left center no-repeat;
+}
+
+//今日推荐
+.todayPoetry {
+  background: rgba(255, 255, 255, 0.5);
+}
+
+.todayPoetry div:hover {
+  color: #fff;
+}
+
+.todayPoetry h2 {
+  color: #333;
+  font-size: 14px;
+  line-height: 30px;
+  background: #fff;
+  text-align: center;
+}
+
+.todayPoetry .poetry-content {
+  padding: 20px;
+  text-align: left;
+}
+
+.poetry-content p {
+  line-height: 30px;
+  margin-bottom: 5px;
+}
+
+.poetry-content .poetry-title {
+  text-align: center;
+}
+
+.poetry-content .poetry-author {
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.poetry-content .poetry-key {
+  display: block;
+  margin-bottom: 5px;
+}
+
+.poetry-sentence {
+  text-indent: 1rem;
+}
+
+.poetry-word {
+  text-indent: 1rem;
+}
+
+//右边的盒子
+.r_box {
+  margin-left: 30px;
+  width: 68%;
+}
+
+//banner
+.ant-carousel .slick-slider {
+  height: 250px;
+  background: #364d79;
+  overflow: hidden;
+}
+
+.ant-carousel .slick-slider img {
+  width: 100%;
+  height: 100%;
+}
+
+.bannerList {
+  position: relative;
+}
+
+.banner-description {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  -moz-transform: translate(-50%, -50%);
+  -ms-transform: translate(-50%, -50%);
+  -o-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.banner-description h3 {
+  color: rgb(255, 255, 255);
+}
+
+//blog-content
+.blog-content {
+  width: 100%;
+  background: rgba(255,255,255,0.8);
+  margin-top: 20px;
+  padding: 24px;
+}
+.blog-content h3 {
+  color: #222;
+  font-size: 16px;
+  line-height: 25px;
+  text-shadow: #FFF 1px 1px 1px;
+}
+.blog-content .blog-info {
+  display: flex;
+  margin: 5px 0 10px 15px;
+  color: #797b7c;
+}
+.blog-info .ant-col {
+  margin-right: 20px;
+}
+.blog-info .ant-col i {
+  margin-right: 5px;
+}
+.blog-info .blog-tag {
+  color: #222;
+  font-size: 14px;
+  height: 25px;
+  line-height: 25px
+}
+.canlendar {
+  display: block;
+  background: url(../images/newsbg02.png) no-repeat 100% 100%;
+  background-size: 100%;
+  width: 20px;
+  height: 20px;
+  background-position: 0 0;
+}
+.blog-time {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.blog-list-body {
+  height: 60px;
+  line-height: 21px;
+  margin-top: 7px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.pagination {
+  position: absolute;
+  left: 50%;
+  -webkit-transform: translate(-50%,50px);
+  -moz-transform: translate(-50%,50px);
+  -ms-transform: translate(-50%,50px);
+  -o-transform: translate(-50%,50px);
+  transform: translate(-50%,50px);
+}

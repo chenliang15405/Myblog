@@ -1,0 +1,47 @@
+@charset "utf-8";
+
+/* header */
+$main-width: 1000px;
+
+header {
+  width: $main-width;
+  overflow: hidden;
+  margin: 0 auto !important;
+}
+
+.headerImgBox {
+  width: $main-width;
+  margin-top: 10px;
+}
+
+#headerImg {
+  width: 200px;
+  height: 100px;
+}
+
+.nav {
+  overflow: hidden;
+  margin: 15px 20px;
+  font-size: 20px;
+}
+
+.nav ul {
+  display: flex;
+  flex-direction: row;
+  margin-top: 30px;
+}
+
+.nav ul li {
+  padding-right: 30px;
+}
+
+/* footer */
+footer {
+  width: 100%;
+  color: #a5a4a4;
+  text-align: center;
+  margin-top: 100px;
+  padding: 40px 0;
+  clear: both;
+  text-shadow: #fff 1px 0 2px, #fff 0 1px 2px, #fff -1px 0 2px, #fff 0 -1px 2px;
+}
