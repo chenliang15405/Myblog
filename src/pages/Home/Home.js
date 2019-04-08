@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Row, Card, Icon, Tag, Col, Pagination} from 'antd'
+import {Row, Card, Icon, Tag, Col, Pagination, BackTop} from 'antd'
 import {Link, withRouter} from 'react-router-dom';
 import axios from 'axios'
 import QueueAnim from 'rc-queue-anim';
@@ -40,7 +40,15 @@ export default class Home extends Component {
         // this.setState({nowPageIssues: this.state.list.slice(0 + pageNum * (page - 1), pageNum + pageNum * (page - 1))})
 
         this.getBlogLabels();//获取博客标签列表
+
+        //监听页面高度
+        window.addEventListener("scroll",this.handlScroll)
     }
+
+    componentWillUnmount(){
+        window.removeEventListener("scroll",this.handlScroll)
+    }
+
 
     //获取issues数据列表
     getIssuesList = () => {
@@ -142,6 +150,18 @@ export default class Home extends Component {
     }
 
 
+    handlScroll = (event) => {
+        console.log(window.scrollY)
+        let jt = this.refs.returnTop;
+        if(window.scrollY <= 500){
+            jt.setAttribute('style','display:none;')
+        } else {
+            jt.setAttribute('style','display:visible;')
+        }
+    }
+
+
+
     render() {
         const {list, labelList, nowPageIssues, page, pageNum} = this.state;
         return (
@@ -196,6 +216,16 @@ export default class Home extends Component {
                     </QueueAnim>
                 </Row>
 
+                {/*TODO 可以做一个fixed的bar，上面有qq weixin app的二维码，通过hover标签可以控制display:none 展示二维码*/}
+                <Row className='slide-bar'>
+                    <BackTop/>
+                    <ul>
+                        <li ref='returnTop'>》</li>
+                        <li>QQ</li>
+                        <li>WX</li>
+                    </ul>
+                </Row>
+
                 <Row className='r_box'>
                     {/*轮播*/}
                     <Banner/>
@@ -231,6 +261,13 @@ export default class Home extends Component {
                                                                         })
                                                                         : null
                                                                 }
+                                                            </Col>
+
+                                                            <Col className='blog-read-count'>
+                                                                阅读数: 999
+                                                            </Col>
+                                                            <Col className='blog-read-count'>
+                                                                评论: 66
                                                             </Col>
 
                                                         </Row>

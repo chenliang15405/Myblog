@@ -3,6 +3,7 @@ import{HashRouter,Route,Switch} from 'react-router-dom';
 
 import App from './App'
 import Home from './pages/Home/Home'
+import Archive from './pages/archive/Archive'
 
 export default class Routers extends Component {
 
@@ -12,6 +13,7 @@ export default class Routers extends Component {
                 <App>
                     <Switch>
                         <Route exact path='/' component={Home} />
+                        <Route exact path='/archive' component={Archive}/>
                     </Switch>
                 </App>
             </HashRouter>

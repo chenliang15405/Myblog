@@ -1,5 +1,4 @@
 import React, {Component} from 'react'
-
 import {Link} from 'react-router-dom';
 
 import LOGO from '../asserts/images/logo.png'
@@ -17,12 +16,12 @@ export default class Header extends Component {
         }
     }
 
-
+    //TODO 将header作为fixed的width 100%的头版
     render() {
         return (
             <header>
                 <div className='headerImgBox'>
-                    <img src={LOGO} alt="logo" id='headerImg'/>
+                    {/*<img src={LOGO} alt="logo" id='headerImg'/>*/}
                 </div>
                 <nav className='nav'>
                     <ul>
@@ -31,6 +30,12 @@ export default class Header extends Component {
                         </li>
                         <li>
                             <Link to={'/archive'}>归档</Link>
+                        </li>
+                        <li>
+                            <Link to={'/archive'}>关于</Link>
+                        </li>
+                        <li>
+                            <Link to={'/archive'}>My Plan</Link>
                         </li>
                     </ul>
                 </nav>
