@@ -1,5 +1,4 @@
 import React, {Component} from 'react';
-import logo from './logo.svg';
 import {HashRouter as Router} from 'react-router-dom';
 import {Row, LocaleProvider, Radio} from 'antd'
 import en from 'antd/lib/locale-provider/en_US';

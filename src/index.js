@@ -6,6 +6,8 @@ import Routers from "./Routers";
 
 import './asserts/css/m.scss'
 import './asserts/css/base.css'
+import './asserts/fonts/iconfont.css'
+
 
 ReactDOM.render(<Routers />, document.getElementById('root'));
 
