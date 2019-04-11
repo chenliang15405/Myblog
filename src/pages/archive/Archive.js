@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {List, message, Avatar, Spin, Icon,Timeline} from 'antd';
+import {List, message, Avatar, Spin, Icon,Timeline,BackTop} from 'antd';
 
 import '../../asserts/css/archive.scss'
 
@@ -62,7 +62,7 @@ export default class Archive extends Component {
         const isBottom = (clientHeight + scrollTop === scrollHeight)    //判断是否到达底部
         console.log('is bottom:' + isBottom)
 
-        let y = window.scrollY
+        // let y = window.scrollY
         //let pageHeight = window.document.body.clientHeight //获取可视区域的高度
         //let pageHeight = window.document.body.scrollHeight  //全部网页的高度
 
@@ -116,6 +116,9 @@ export default class Archive extends Component {
     render() {
         return (
             <div className='archive-container'>
+                <div className='slide-bar'>
+                    <BackTop/>
+                </div>
                 <Timeline>
                     <List
                         itemLayout='vertical'

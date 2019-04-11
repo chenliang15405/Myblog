@@ -5,6 +5,8 @@
   "dependencies": {
     "antd": "^3.16.1",
     "axios": "^0.18.0",
+    "highlight.js": "^9.15.6",
+    "marked": "^0.6.2",
     "node-sass": "^4.11.0",
     "rc-queue-anim": "^1.6.12",
     "react": "^16.8.3",

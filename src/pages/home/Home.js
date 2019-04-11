@@ -151,7 +151,6 @@ export default class Home extends Component {
 
 
     handlScroll = (event) => {
-        console.log(window.scrollY)
         let jt = this.refs.returnTop;
         if(window.scrollY <= 500){
             jt.setAttribute('style','display:none;')
@@ -244,7 +243,7 @@ export default class Home extends Component {
                                     return (
                                         <Card key={index} className='blog-content'>
                                             <Meta
-                                                title={<h3><Link to={`/blog/${item.number}`}/>{item.title}</h3>}
+                                                title={<h3><Link to={`/blog/${item.number}`}>{item.title}</Link></h3>}
                                                 description={
                                                     <Row>
                                                         <Row className='blog-info'>

@@ -1,0 +1,167 @@
+@charset "utf-8";
+
+$info-container-width:80%;
+$info-box-width:900px;
+$news-container:260px;
+
+.container {
+  width: $info-container-width;
+  margin: 50px auto;
+  font-family: Chinese Quote,-apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica Neue,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
+  color: rgba(0,0,0,.65);
+}
+// blog-content
+.info-box {
+  width: $info-box-width;
+  //margin: 0 auto;
+}
+.info {
+  padding: 24px;
+}
+.info h3 {
+  font-size: 22px;
+  color: #333;
+  text-align: center;
+}
+.info .detail {
+  display: flex;
+  justify-content: space-between;
+  margin: 30px 5px 30px 5px;
+  font-size: 12px;
+  color: #888888;
+}
+.display-f {
+  display: flex;
+}
+.tag {
+  margin-left: 20px;
+}
+.read-great {
+  margin-left: 15px;
+}
+.tag-link {
+  display: inline-block;
+  border-radius: 7px;
+  cursor: pointer;
+  margin-left: 5px;
+  padding: 0px 8px;
+}
+.tag-link:hover {
+  color: #fff;
+}
+//使用pre和code设置代码和内容
+.news_con pre {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 30px;
+  background: #333;
+  color: #f8f8f8;
+}
+
+//news-container
+.news-container {
+  width: $news-container;
+  margin-left: 30px;
+  position: absolute;
+  top: 0;
+  right: -20px;
+}
+.news-container .news-card {
+  width: 100%;
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+}
+.latest-blog {
+  padding: 15px;
+}
+.latest-blog li {
+  margin-top: 10px;
+  cursor: pointer;
+}
+.latest-blog li a:hover {
+  color: #ffb30e;
+}
+.ant-card-head {
+  font-size: 14px;
+  color: #333;
+  line-height: 3px;
+  min-height:0;
+  background-color: #f5f5f5;
+}
+.hot-blog {
+  padding: 15px;
+}
+.hot-blog a {
+  font-size: 14px;
+  color: #333;
+  cursor: pointer;
+}
+.hot-blog a:hover {
+  color: #0075e9;
+}
+.hot-blog div {
+  margin-bottom: 10px;
+}
+.hot-blog p {
+  font-size: 12px;
+  color: #858585;
+  line-height: 20px;
+  margin-bottom: 0;
+}
+.latest-comment {
+  padding: 15px;
+}
+.latest-comment a {
+  display:block;
+  font-size: 14px;
+  color: #336699;
+  cursor: pointer;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  word-wrap:break-word;
+}
+.latest-comment a:hover {
+  color: #ffb30e;
+}
+.comment {
+  font-size: 12px;
+  color: #858585;
+  word-wrap: break-word;
+  vertical-align: top;
+  display: block;
+  word-break: break-all;
+}
+//这个是p的高度，决定了有几行，并且设置为行数的高度，然后最后向前::before设置伪元素，::after设置伪元素，如果前置的伪元素在后面则备后置清除掉，
+//如果后置的在后面，前置的已经在文字的紧跟着后面，则清除不掉
+.ellipsis {
+  position: relative;
+  line-height: 1.5em;
+  max-height: 3em;
+  overflow: hidden;
+}
+//设置为元素，将内容以#fff覆盖，z-index:1，然后使用伪元素...替换
+.ellipsis::before {
+  content: '...';
+  position: absolute;
+  z-index: 1;
+  bottom: 0;
+  right: 0;
+  width: 24px;
+  padding-left: 8px;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  background-color: #fff;
+  background: -webkit-gradient(linear,left top, right top,from(transparent),color-stop(40%, #fff));
+  background: linear-gradient(to right,transparent,#fff 40%);
+}
+.ellipsis::after {
+  content: '';
+  display: inline-block;
+  position: absolute;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  background-color: #fff;
+}
