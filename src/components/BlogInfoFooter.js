@@ -1,5 +1,5 @@
 import React, {Component} from 'react'
-import {Row, Col} from 'antd'
+import {Row, Col,Comment, Icon, Tooltip, Avatar} from 'antd'
 import {Link} from 'react-router-dom';
 
 /**
@@ -61,7 +61,7 @@ export default class BlogInfoFooter extends Component {
                     <Col className='great-pay-box'>
                         <div className='great-but'>
                             <i className='iconfont great'>&#xe676;</i>
-                            <span className='word'>  赞(10)</span>
+                            <span className='word'>  Start(10)</span>
                         </div>
                         <div className='pay-but'>
                             <i className='iconfont pay'>&#xe6c3;</i>
@@ -70,15 +70,25 @@ export default class BlogInfoFooter extends Component {
                     </Col>
 
                 </Row>
-                <Row>
-                    <Col>
-                        上一篇:
-                    </Col>
-                    <Col>
-                        下一篇？
-                    </Col>
+                <Row className='previous-next-box'>
+                    <Row className='previous-next'>
+                        <Col className='previous'>
+                            <Link to=''>
+                                <p>上一篇</p>
+                                <span>zblog百度MIP轻奢主题Lightlee给你极速体验</span>
+                            </Link>
+                        </Col>
+                        <div className='separator'></div>
+                        <Col className='next'>
+                            <Link to=''>
+                                <p>上一篇</p>
+                                <span>zblog百度MIP轻奢主题Lightlee给你极速体验</span>
+                            </Link>
+                        </Col>
+                    </Row>
                 </Row>
                 <Row>
+                    {/*点击评论，会显示窗户需要填写信息*/}
                     用户信息
                 </Row>
                 <Row>
