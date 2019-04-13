@@ -22,7 +22,8 @@ export default class Header extends Component {
         return (
             <header>
                 <div className='headerImgBox'>
-                    {/*<img src={LOGO} alt="logo" id='headerImg'/>*/}
+                    <img src={LOGO} alt="logo" id='headerImg' width={'100px'}/>
+                    <span>若不是生活所迫，谁会把自己弄的一身才华!</span>
                 </div>
                 <nav className='nav'>
                     <ul>
@@ -49,9 +50,6 @@ export default class Header extends Component {
                             <DatePicker />
                             <TimePicker/>
                         </li>
-                        {/*<li>*/}
-                           {/*若不是生活所迫，谁会把自己弄的一身才华*/}
-                        {/*</li>*/}
                     </ul>
                 </nav>
             </header>

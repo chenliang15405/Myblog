@@ -29,7 +29,7 @@ export default class Blog extends Component {
             highlight: code => hljs.highlightAuto(code).value,
         });
         //获取数据
-        //this.getBlogContent(this.props.match.params.id);
+        this.getBlogContent(this.props.match.params.id);
 
     }
 
@@ -38,7 +38,7 @@ export default class Blog extends Component {
     componentWillReceiveProps(nextProps) {
         if (this.props.match.params.id !== nextProps.match.params.id) {
             //状态改变的时候，采取执行加载数据的函数，否则不执行，提高性能
-           // this.getBlogContent(nextProps.match.params.id)
+           this.getBlogContent(nextProps.match.params.id)
         }
     }
 
@@ -71,7 +71,7 @@ export default class Blog extends Component {
         return (
             <Row className='container'>
                 {/*左边blog内容*/}
-                {/*<Col className='info-box'>
+                <Col className='info-box'>
                     <Card>
                         <article className='info'>
                             <h3>{content.title}</h3>
@@ -104,15 +104,18 @@ export default class Blog extends Component {
                                 </div>
                             </div>
 
-                            将markdown语法转换为html,将内容中的标签进行解析为html并渲染，然后设置其中的高亮code
+                            {/*将markdown语法转换为html,将内容中的标签进行解析为html并渲染，然后设置其中的高亮code*/}
                             <div className="news_con"
                                  dangerouslySetInnerHTML={{__html: marked(content.body ? content.body : "")}}/>
 
                         </article>
 
                     </Card>
+
+                    <BlogInfoFooter/>
+
                 </Col>
-                右边栏
+                {/*右边栏*/}
                 <Col className='news-container'>
                     <Card className='news-card' bordered={false} title='最新文章'>
                         <div className='latest-blog'>
@@ -152,7 +155,7 @@ export default class Blog extends Component {
                         </div>
                     </Card>
                     <Card className='news-card' title='最新评论'>
-                        TODO 通过点击文章title连接可以直接跳转到评论页面的高度，并且省略文字。
+                        {/*TODO 通过点击文章title连接可以直接跳转到评论页面的高度，并且省略文字。*/}
                         <div className='latest-comment'>
                             <div>
                                 <Link to='' className='comment-title'>鼠标位置的获取pageX，page内容隐藏的数据</Link>
@@ -169,8 +172,6 @@ export default class Blog extends Component {
                         </div>
                     </Card>
                 </Col>
-*/}
-                <BlogInfoFooter/>
             </Row>
         )
     }

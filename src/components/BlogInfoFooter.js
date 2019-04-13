@@ -1,7 +1,61 @@
 import React, {Component} from 'react'
-import {Row, Col,Comment, Icon, Tooltip, Avatar} from 'antd'
+import {Row, Col,Comment, Icon, Tooltip, Avatar,Input,Select,Form,Button} from 'antd'
 import {Link} from 'react-router-dom';
+const Option = Select.Option;
+const TextArea = Input.TextArea;
 
+
+const selectBefore = (
+    <Select defaultValue="Http://" style={{ width: 90 }}>
+        <Option value="Http://">Http://</Option>
+        <Option value="Https://">Https://</Option>
+    </Select>
+);
+const selectAfter = (
+    <Select defaultValue=".com" style={{ width: 80 }}>
+        <Option value=".com">.com</Option>
+        <Option value=".jp">.jp</Option>
+        <Option value=".cn">.cn</Option>
+        <Option value=".org">.org</Option>
+    </Select>
+);
+//评论列表展示
+const ExampleComment = ({ children }) => (
+    <Comment
+        actions={[<span>Reply to</span>]}
+        author={<a>Han Solo</a>}
+        avatar={(
+            <Avatar
+                src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                alt="Han Solo"
+            />
+        )}
+        content={<p>We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure).</p>}
+    >
+        {children}
+    </Comment>
+);
+
+//评论
+const Editor = ({
+                    onChange, onSubmit, submitting, value,showUserInfo
+                }) => (
+    <div onClick={showUserInfo}>
+        <Form.Item>
+            <TextArea rows={4} onChange={onChange} value={value} />
+        </Form.Item>
+        <Form.Item>
+            <Button
+                htmlType="submit"
+                loading={submitting}
+                onClick={onSubmit}
+                type="primary"
+            >
+                Add Comment
+            </Button>
+        </Form.Item>
+    </div>
+);
 /**
  * blog info footer
  */
@@ -11,12 +65,41 @@ export default class BlogInfoFooter extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            tags:['教程','js','java','后端']
+            tags:['教程','js','java','后端'],
+            submitting:false, //提交评论时，按钮是否loading
+            commentValue : '' //评论的文本
         }
     }
 
+    //输入评论
+    handleChange = (e) => {
+        this.setState({
+            commentValue: e.target.value
+        })
+    }
+
+    //提交评论
+    handleSubmit = () => {
+        console.log('handleSubmit')
+    }
+
+    //出发用户信息
+    showUserInfo = () => {
+        //用于setAttribute的获取的容器，必须是html标签，不能是组件中标签，例如 Row
+        let userInfoBox = this.refs.userInfo
+        userInfoBox.setAttribute('style','display:block;')
+    }
+
+    //快速回复
+    autoComment = (value) => {
+        let {commentValue} = this.state
+        this.setState({
+            commentValue: commentValue + value
+        })
+    }
 
     render() {
+        const {  submitting, commentValue } = this.state;
         return (
             <Row className='blog-info-footer'>
                 <Row className='blog-footer-tags'>
@@ -87,15 +170,72 @@ export default class BlogInfoFooter extends Component {
                         </Col>
                     </Row>
                 </Row>
-                <Row>
+                <div className='user-info-box' ref='userInfo'>
+                    {/*TODO 可以实现一个扫码登录网站数据，通过生成一个随机的用户信息，然后用户扫码之后会生成一个随机的用户信息，获取到该Ip，就可以了。*/}
                     {/*点击评论，会显示窗户需要填写信息*/}
-                    用户信息
+                    <div className='user-info'>
+                        <span className='tips'>昵称:</span>
+                        <Input placeholder="昵称(必填)" allowClear onChange={(e)=> console.log(e.target.value)} />
+                    </div>
+                    <div className='user-info'>
+                        <span className='tips'>邮箱:</span>
+                        <Input placeholder="邮箱(选填)" allowClear onChange={(e)=> console.log(e.target.value)} />
+                    </div>
+                    <div className='user-info url'>
+                        <span className='tips'>网址:</span>
+                        <Input addonBefore={selectBefore} allowClear addonAfter={selectAfter}  placeholder="网址(选填)"/>
+                    </div>
+                </div>
+                <Row className='comment-post-box'>
+                    <div className='comment-title'>
+                        <i></i>
+                        <h4>发表评论</h4>
+                    </div>
+                    <div className='fast-comment'>
+                        <span style={{marginRight:'5px'}}>快捷回复:</span>
+                        <a href='javascript:void(0);' title="文章不错,写的很好！" onClick={()=>this.autoComment('文章不错,写的很好！')}>
+                            <i className='iconfont'>&#xe60c;</i>
+                        </a>
+                        <a  title="emmmmm... 看不懂怎么破？"  onClick={()=>this.autoComment('emmmmm... 看不懂怎么破？')}>
+                            <i className='iconfont'>&#xe627;</i>
+                        </a>
+                        <a  title="赞、狂赞、超赞、不得不赞、史上最赞！"  onClick={()=>this.autoComment('赞、狂赞、超赞、不得不赞、史上最赞！')}>
+                            <i className='iconfont'>&#xe657;</i>
+                        </a>
+                    </div>
+                    <div>
+                        <Comment
+                            content={(
+                                <Editor
+                                    onChange={this.handleChange}
+                                    onSubmit={this.handleSubmit}
+                                    submitting={submitting}
+                                    value={commentValue}
+                                    showUserInfo = {this.showUserInfo}
+                                />
+                            )}
+                        />
+                    </div>
                 </Row>
                 <Row>
-                    评论
-                </Row>
-                <Row>
-                    评论列表
+                    {/*
+                        TODO 可以通过map循环来展示评论列表，通过循环父评论，然后判断是否有自评论，如果有，再循环子评论，只循环3层，然后展示所有的评论
+                        父评论通过id关联blog，第二层自评论通过关联blog以及父评论的id,第三层也是关联blog以及父评论的id，只不过循环的不一样
+                         或者说可以做成手风琴菜单
+                    */}
+                    <div className='comment-list-title'>
+                        <span>评论列表：</span>
+                        <i className='iconfont'>&#xe7f4;</i>
+                        <span>99</span>
+                    </div>
+                    <div className='comment-list'>
+                        <ExampleComment>
+                            <ExampleComment>
+                                <ExampleComment />
+                                <ExampleComment />
+                            </ExampleComment>
+                        </ExampleComment>
+                    </div>
                 </Row>
             </Row>
         )

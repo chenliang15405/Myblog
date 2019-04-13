@@ -174,7 +174,7 @@ $news-container:260px;
   align-items: center;
   font-size: 16px;
   color: #333;
-  margin:10px 0 40px 30px;
+  margin:30px 0 40px 30px;
 }
 .tag-item {
   display: block;
@@ -188,6 +188,7 @@ $news-container:260px;
   border-top: 1px solid #cccccc;
   border-bottom: 1px solid #cccccc;
   height: 100px;
+  margin-top: 70px;
 }
 .copy-right-title {
   width: 180px;
@@ -218,7 +219,7 @@ $news-container:260px;
 }
 .share-great {
   width: 100%;
-  margin-top: 30px;
+  margin-top: 50px;
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -278,7 +279,7 @@ $news-container:260px;
   border-bottom: 1px solid #dddddd;
   background-color: #fbfbfb;
   padding: 10px 20px;
-  margin: 30px 0;
+  margin: 50px 0;
 
   .previous-next {
     height: 50px;
@@ -309,5 +310,69 @@ $news-container:260px;
     a:hover{
       color: #3690FC;
     }
+  }
+}
+.user-info-box {
+  display: none;
+  margin-bottom: 20px;
+  transition:all 2s;
+}
+.user-info {
+  margin-bottom: 15px;
+  display: flex;
+  align-items: center;
+  width: 300px;
+
+  .tips {
+    display: inline-block;
+    width: 50px;
+  }
+}
+.url {
+  width: 350px !important;
+}
+//发表评论
+.comment-post-box {
+  .ant-comment-avatar{
+    margin-right: 0;
+  }
+  .ant-comment-inner {
+    padding: 2px 0;
+  }
+  .fast-comment {
+    margin:20px 3px 3px 8px;
+    font-size: 14px;
+    a {
+      padding: 1px 6px;
+      color: #666;
+      cursor: pointer;
+    }
+  }
+  .comment-title {
+    border-bottom: 1px solid #dddddd;
+    h4 {
+      font-size: 16px;
+      color: #333;
+      line-height: 2;
+    }
+  }
+}
+
+.comment-list-title {
+  font-size: 16px;
+  color: #333;
+  border-bottom: 1px solid #ddd;
+  padding:10px 0px 10px 0px;
+  margin:20px 0px;
+  i {
+    margin-right: 7px;
+    font-size: 18px;
+    color: #333;
+  }
+}
+.comment-list {
+  background: #fff;
+  .ant-comment-inner {
+    padding: 12px 10px;
   }
 }
