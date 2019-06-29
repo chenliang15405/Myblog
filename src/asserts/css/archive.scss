@@ -13,6 +13,7 @@ $container-width:1000;
   background: #fff;
   padding-bottom: 0 !important;
   box-sizing: border-box;
+  align-items: center !important;
 }
 .ant-list-item-main {
   padding: 8px  24px;
@@ -20,6 +21,7 @@ $container-width:1000;
 .ant-list-item-extra {
   margin-bottom: 16px;
   margin-right: 15px;
+  margin-left: 0;
 }
 .loading-container {
   text-align: center;
@@ -34,4 +36,10 @@ $container-width:1000;
   right: 50px;
   bottom: 180pt;
   width: 95px;
+}
+.blogImage {
+  vertical-align: middle;
+  display: block;
+  width: 220px;
+  height: 180px;
 }

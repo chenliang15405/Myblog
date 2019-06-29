@@ -1,7 +1,9 @@
 import React, {Component} from 'react'
 import {List, message, Avatar, Spin, Icon,Timeline,BackTop} from 'antd';
+import axios from 'axios'
 
 import '../../asserts/css/archive.scss'
+import {Timetransfer} from "../../utils/TimeUtil";
 
 
 //设置icon的内容和type
@@ -24,22 +26,16 @@ export default class Archive extends Component {
             data: [],
             loading: false,
             hasMore: true,
+            archive: {
+              pageSize: 6,
+              page: 1,
+              total: 0
+            }
         }
     }
 
     componentWillMount() {
-        //模拟数据
-        const data = [];
-        for (let i = 0; i < 6; i++) {
-            data.push({
-                href: 'http://ant.design',
-                title: `ant design part ${i}`,
-                avatar: 'https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png',
-                description: 'Ant Design, a design language for background applications, is refined by Ant UED Team.',
-                content: 'We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure), to help people create their product prototypes beautifully and efficiently.',
-            });
-        }
-        this.setState({data})
+        this.getBlogArchiveList()
     }
 
     componentDidMount() {
@@ -68,16 +64,18 @@ export default class Archive extends Component {
 
         this.loadDataWithScroll(isBottom);
 
-
     }
-    
+
+    // 处理滚屏无限加载
     loadDataWithScroll = (isBottom) => {
-        let data = this.state.data;
+        let { data,archive,hasMore } = this.state
         if(isBottom){
             this.setState({
                 loading: true,
             });
-            if (data.length > 14) {
+            console.log(data.length)
+            console.log(data)
+            if (data.length >= archive.total) {
                 message.warning('Infinite List loaded all');
                 this.setState({
                     hasMore: false,
@@ -86,19 +84,38 @@ export default class Archive extends Component {
                 return;
             }
             //获取数据
-            data = data.concat(this.state.data)
-            // this.setState({
-            //     data,
-            //     loading:false
-            // })
+            hasMore && this.getBlogArchiveList()
+
         } else {
-            this.setState({
-                loading: false,
-            });
+
         }
     }
-    
-    
+
+    // 获取归档博客列表
+    getBlogArchiveList = () => {
+      const { archive } = this.state
+        // 页面每次加载6个
+      const api = `http://localhost:9011/article/article/archive/${archive.page}/${archive.pageSize}`
+      axios.get(api)
+        .then(response => {
+            // console.log(`getBlogArchiveList: `,response)
+            if(response.data.code === 20000) {
+                const data = response.data.data
+                archive.total = data.total  // 需要先给对象的属性赋值，然后再setState，否则覆盖该对象其他的值
+                archive.page = archive.page + 1 //滚屏加载则+1
+                let list = this.formatTime(data.rows)
+                list = this.state.data.concat(list) // 拼接之前的list
+                this.setState({
+                    data: list,
+                    archive,
+                    loading:false
+                })
+            }
+        })
+        .catch(err => {
+          message.error('Server is not available');
+        })
+    }
 
     //获取到滚动条的高度
     getScrollTop = () => {
@@ -110,6 +127,18 @@ export default class Archive extends Component {
             scroll_top = document.body.scrollTop;
         }
         return scroll_top;
+    }
+
+    //格式化时间
+    formatTime = (data) => {
+        if (data.length === 0) {
+          return
+        }
+        data.map((item) => {
+          item.createtime = Timetransfer(item.createtime);
+          return ''
+        })
+        return data;
     }
 
 
@@ -126,29 +155,31 @@ export default class Archive extends Component {
                         dataSource={this.state.data}
                         // footer={<div><b>ant design</b> footer part</div>}
                         renderItem={item => (
-                            <Timeline.Item dot={<Icon type="clock-circle-o" style={{ fontSize: '16px' }}/>} color='red'>
-                                2019-03-31
-                            <List.Item
-                                key={item.title}
-                                actions={[<IconText type="star-o" text="156" />, <IconText type="like-o" text="156" />, <IconText type="message" text="2" />]}
-                                extra={<img width={272} alt="logo"
-                                            src="https://gw.alipayobjects.com/zos/rmsportal/mqaQswcyDLcXyDKnZfES.png" />}
-                            >
-                                <List.Item.Meta
-                                    avatar={<Avatar src={item.avatar}/>}
-                                    title={<a href={item.href}>{item.title}</a>}
-                                    description={item.description}
-                                />
-                                {item.content}
-                            </List.Item>
+                            <Timeline.Item dot={<Icon type="clock-circle-o" style={{ fontSize: '16px' }}/>} color='blue'>
+                                {item.createtime}
+                                <List.Item
+                                    key={item.title}
+                                    actions={[<IconText type="star-o" text="156" />, <IconText type="like-o" text="156" />, <IconText type="message" text="2" />]}
+                                    extra={<img className='blogImage' alt="images"
+                                                src={item.image} />}
+                                >
+                                    <List.Item.Meta
+                                        avatar={<Avatar src={item.avatar}/>}
+                                        title={<a href={item.url}>{item.title}</a>}
+                                        description={<p>分类：{item.categoryName}</p>}
+                                    />
+                                    {item.summary}
+                                </List.Item>
                             </Timeline.Item>
                         )}
                     >
-                        {this.state.loading && this.state.hasMore && (
-                            <div className="loading-container">
-                                <Spin/>
-                            </div>
-                        )}
+                        {
+                            this.state.loading && this.state.hasMore && (
+                                <div className="loading-container">
+                                    <Spin/>
+                                </div>
+                            )
+                        }
                     </List>
                 </Timeline>
             </div>

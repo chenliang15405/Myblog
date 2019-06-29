@@ -60,7 +60,8 @@ $right-box-width: 68%;
 .catagory {
   background: rgba(255, 255, 255, 0.5);
   margin-bottom: 20px;
-  overflow: hidden
+  overflow: hidden;
+  min-height: 150px;
 }
 
 .catagory h2 {
@@ -72,6 +73,7 @@ $right-box-width: 68%;
 }
 .catagory ul {
   padding: 10px;
+  padding-left: 25px;
   overflow: hidden;
   display: flex;
   flex-direction: row;
@@ -80,12 +82,12 @@ $right-box-width: 68%;
 
 .catagory ul a {
   display: block;
-  padding: 0 5px;
-  margin: 10px 10px 0 0;
+  padding: 0 8px;
+  margin: 15px 10px 0 0;
   line-height: 24px;
   height: 24px;
   background: #999;
-  border-radius: 8px;
+  //border-radius: 8px;
   color: #FFF;
   font-size: 12px;
   transition: all .5s;
@@ -95,9 +97,11 @@ $right-box-width: 68%;
 }
 
 .catagory ul a:hover {
-  border-radius: 5px;
-  padding: 5px;
-  text-shadow: #000 3px 3px 3px
+  //padding: 5px;
+  //text-shadow: #000 3px 3px 3px
+  transition: all .2s linear;
+  transform: scale(1.2);
+  cursor: pointer;
 }
 
 //最近文章

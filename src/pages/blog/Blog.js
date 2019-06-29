@@ -9,6 +9,7 @@ import {Card, message, Row, Col} from 'antd';
 import BlogInfoFooter from '../../components/BlogInfoFooter'
 import {TimetransferDetail} from '../../utils/TimeUtil'
 import '../../asserts/css/blogInfo.scss'
+import { rgbaColor } from '../../utils/Color'
 
 /**
  * blog info 模块
@@ -18,7 +19,8 @@ export default class Blog extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            content: []
+            content: "",
+            blogId: props.match.params.id
         }
     }
 
@@ -28,9 +30,9 @@ export default class Blog extends Component {
         marked.setOptions({
             highlight: code => hljs.highlightAuto(code).value,
         });
+
         //获取数据
         this.getBlogContent(this.props.match.params.id);
-
     }
 
 
@@ -44,25 +46,23 @@ export default class Blog extends Component {
 
 
     getBlogContent = (id) => {
-        const api = `https://api.github.com/repos/weiyongyuan94/blogtext/issues/` + id;
-        //TODO 需要使用promise或者封装工具类
-        axios.get(api, {
-            creator: 'weiyongyuan94',
-            client_id: 'a5636a8f618a5ce0c877',
-            client_secret: '054b02cccd28b32a030b4ac7778384fc3fe7e812',
-        }).then((response) => {
-            if (response.status === 200) {
-                const data = response.data;
+        const api = `http://localhost:9011/article/article/${id}`
+        axios.get(api)
+          .then(response => {
+              if(response.data.code === 20000) {
+                const data = response.data.data
                 //设置页面的title
                 document.title = data.title
-                console.log(data)
+                console.log("data",data)
                 this.setState({
-                    content: data
+                  content: data
                 })
-            }
-        }).catch(function (error) {
-            message.warning("文章不存在!");
-        });
+              }
+          })
+          .catch(err => {
+              console.log(err)
+              message.warning("文章不存在!");
+          })
     }
 
 
@@ -77,18 +77,19 @@ export default class Blog extends Component {
                             <h3>{content.title}</h3>
                             <div className='detail'>
                                 <div className='display-f'>
-                                    <div>{TimetransferDetail(content.updated_at)}</div>
+                                    <div>{TimetransferDetail(content.updatetime)}</div>
                                     <div className='tag'>
                                         分类:
                                         {
-                                            content.labels && content.labels.length > 0 ?
-                                                content.labels.map((item, key) => {
-                                                    return <Link key={key} to={`/cloud/${item.name}`}
-                                                                 style={{backgroundColor: `#${item.color}`}}
+                                            content.categoryName ?
+                                                content.categoryName.split(',').map((item, key) => {
+                                                    return <Link key={key} to={`/cloud/${item}`}
+                                                                 style={{backgroundColor: rgbaColor()}}
                                                                  className='tag-link'>
-                                                        {item.name}
-                                                    </Link>
-                                                }) : null
+                                                                {item}
+                                                            </Link>
+                                                        })
+                                                 : null
                                         }
                                     </div>
                                 </div>
@@ -106,13 +107,14 @@ export default class Blog extends Component {
 
                             {/*将markdown语法转换为html,将内容中的标签进行解析为html并渲染，然后设置其中的高亮code*/}
                             <div className="news_con"
-                                 dangerouslySetInnerHTML={{__html: marked(content.body ? content.body : "")}}/>
+                                 dangerouslySetInnerHTML={{__html: marked(content.content ? content.content : "")}}/>
 
                         </article>
 
                     </Card>
-
-                    <BlogInfoFooter/>
+                    
+                    {/*博客footer*/}
+                    <BlogInfoFooter blogId={this.state.blogId}/>
 
                 </Col>
                 {/*右边栏*/}

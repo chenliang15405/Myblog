@@ -1,6 +1,7 @@
 import React, {Component} from 'react'
-import {Row, Col,Comment, Icon, Tooltip, Avatar,Input,Select,Form,Button} from 'antd'
+import {Row, Col,Comment, Avatar,Input,Select,Form,Button} from 'antd'
 import {Link} from 'react-router-dom';
+import axios from 'axios'
 const Option = Select.Option;
 const TextArea = Input.TextArea;
 
@@ -62,14 +63,39 @@ const Editor = ({
 export default class BlogInfoFooter extends Component {
 
 
-    constructor(props) {
+   constructor(props) {
         super(props)
         this.state = {
-            tags:['教程','js','java','后端'],
+            labels:[],
             submitting:false, //提交评论时，按钮是否loading
             commentValue : '' //评论的文本
         }
     }
+
+
+    componentWillMount() {
+       // 获取标签列表
+      const blogId = this.props.blogId
+      console.log("blogid ",this.props.blogId)
+      const api = `http://localhost:9011/tag/label/blog/${blogId}`
+      axios.get(api)
+        .then(response => {
+            if(response.data.code === 20000) {
+              const data = response.data.data
+              console.log("blog_label:",data)
+                this.setState({
+                    labels: data
+                })
+            }
+        })
+        .catch(err => {
+            console.log("blog_label error: " ,err)
+        })
+    }
+
+
+
+
 
     //输入评论
     handleChange = (e) => {
@@ -83,7 +109,7 @@ export default class BlogInfoFooter extends Component {
         console.log('handleSubmit')
     }
 
-    //出发用户信息
+    //触发用户信息
     showUserInfo = () => {
         //用于setAttribute的获取的容器，必须是html标签，不能是组件中标签，例如 Row
         let userInfoBox = this.refs.userInfo
@@ -105,11 +131,11 @@ export default class BlogInfoFooter extends Component {
                 <Row className='blog-footer-tags'>
                     <i className='iconfont'>&#xe676;</i>
                     标签: {
-                        this.state.tags.map((item,key) => {
+                        this.state.labels.map((item,key) => {
                             return (
-                                <Link key={key}  to='' className='tag-item'>
-                                    {item}
-                                </Link>
+                                <span key={key} className='tag-item'>
+                                    {item.labelname}
+                                </span>
                             )
                         })
                     }
@@ -119,8 +145,8 @@ export default class BlogInfoFooter extends Component {
                         文章版权及转载声明：
                     </div>
                     <div className='copy-right-statement'>
-                        <p>作者:  <a style={{color:'red'}}>xxxx</a> ,https://www.talklee.com/blog/290.html,发布于 1年前 ( 2017-10-26 )</p>
-                        <p>文章转载或复制请注明出处<a style={{color:'red'}}> 李洋个人博客</a></p>
+                        <p>作者:  <a href="http://www.baidu.com" style={{color:'red'}}>xxxx</a> ,{window.location.href},发布于 (2019-01-01)</p>
+                        <p>文章转载或复制请注明出处<a href="http://www.baidu.com" style={{color:'red'}}> 唐宋个人博客</a></p>
                     </div>
                 </Row>
                 <Row className='share-great'>
@@ -129,16 +155,17 @@ export default class BlogInfoFooter extends Component {
                             <span>分享: </span>
                         </div>
                         <div className='share-item'>
-                            <i></i>
-                            <a href="">微博</a>
+                            {/*TODO icon*/}
+                            {/*<i></i>*/}
+                            <a href="http://www.baidu.com">微博</a>
                         </div>
                         <div className='share-item'>
-                            <i></i>
-                            <a href="">微信</a>
+                            {/*<i></i>*/}
+                            <a href="http://www.baidu.com">微信</a>
                         </div>
                         <div className='share-item'>
-                            <i></i>
-                            <a href="">QQ</a>
+                            {/*<i></i>*/}
+                            <a href="http://www.baidu.com">QQ</a>
                         </div>
                     </Col>
                     <Col className='great-pay-box'>
@@ -196,10 +223,10 @@ export default class BlogInfoFooter extends Component {
                         <a href='javascript:void(0);' title="文章不错,写的很好！" onClick={()=>this.autoComment('文章不错,写的很好！')}>
                             <i className='iconfont'>&#xe60c;</i>
                         </a>
-                        <a  title="emmmmm... 看不懂怎么破？"  onClick={()=>this.autoComment('emmmmm... 看不懂怎么破？')}>
+                        <a  href="javascript:void(0);" title="emmmmm... 看不懂怎么破？"  onClick={()=>this.autoComment('emmmmm... 看不懂怎么破？')}>
                             <i className='iconfont'>&#xe627;</i>
                         </a>
-                        <a  title="赞、狂赞、超赞、不得不赞、史上最赞！"  onClick={()=>this.autoComment('赞、狂赞、超赞、不得不赞、史上最赞！')}>
+                        <a  href="javascript:void(0);" title="赞、狂赞、超赞、不得不赞、史上最赞！"  onClick={()=>this.autoComment('赞、狂赞、超赞、不得不赞、史上最赞！')}>
                             <i className='iconfont'>&#xe657;</i>
                         </a>
                     </div>

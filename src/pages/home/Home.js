@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {Row, Card, Icon, Tag, Col, Pagination, BackTop} from 'antd'
-import {Link, withRouter} from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import axios from 'axios'
 import QueueAnim from 'rc-queue-anim';
 
@@ -21,23 +21,20 @@ export default class Home extends Component {
     constructor(props) {
         super(props)
         this.state = {
-            artNum: 0,
-            list: [],        //issues 列表
+            total: 0,
+            blogList: [],        //issues 列表
             labelList: [],         //标签列表
-            nowPageIssues: [],
             page: 1,        // 当前选中的页码
-            pageNum: 6,     // 一页的数量
+            pageSize: 6,     // 一页的数量
         }
     }
 
 
     componentDidMount() {
-        this.getIssuesList();//获取issue数据列表
 
-        const {page, pageNum} = this.state;
-        document.title = "读心"
+        this.getBlogList(); //获取博客文章列表
 
-        // this.setState({nowPageIssues: this.state.list.slice(0 + pageNum * (page - 1), pageNum + pageNum * (page - 1))})
+        document.title = "唐宋"
 
         this.getBlogLabels();//获取博客标签列表
 
@@ -50,61 +47,50 @@ export default class Home extends Component {
     }
 
 
-    //获取issues数据列表
-    getIssuesList = () => {
-        const {page, pageNum} = this.state;
-        //获取博客内容
-        axios.get(`https://api.github.com/repos/weiyongyuan94/blogtext/issues`, {
-            params: {
-                creator: 'weiyongyuan94',
-                client_id: 'a5636a8f618a5ce0c877',
-                client_secret: '054b02cccd28b32a030b4ac7778384fc3fe7e812',
-            }
-        }).then(response => {
-            console.log("issues ")
-            console.log(response)
-            if (response.status === 200) {
-                const data = response.data;
-                const list = this.formatTime(data);
+    //获取博客文章列表
+    getBlogList = () => {
+        const {page, pageSize} = this.state;
+
+        axios.post(`http://localhost:9011/article/article/search/${page}/${pageSize}`,{})
+          .then(response => {
+            console.log("article : ",response)
+            if(response.data.code === 20000) {
+                const data = response.data.data
+                const list = this.formatTime(data.rows)
 
                 this.setState({
-                    artNum: data.length,
-                    list: list,
-                    nowPageIssues: list.slice(0 + pageNum * (page - 1), pageNum + pageNum * (page - 1))
+                  total: data.total,
+                  blogList: list
                 })
-            }
-        })
+             }
+          })
     }
 
-    //获取博客标签列表
+
     getBlogLabels = () => {
-        axios.get(`https://api.github.com/repos/weiyongyuan94/blogtext/issues`, {
-            params: {
-                creator: 'weiyongyuan94',
-                client_id: 'a5636a8f618a5ce0c877',
-                client_secret: '054b02cccd28b32a030b4ac7778384fc3fe7e812',
-            },
-        }).then((response) => {
-            console.log("label : ")
-            console.log(response)
-            if (response.status === 200) {
-                // 进行时间格式统一处理
-                const data = response.data;
-                this.noRepeat(data)
-            } else {
+        axios.get(`http://localhost:9011/category/category/`)
+          .then(response => {
+              if(response.data.code === 20000) {
+                  console.log("labels: ",response)
+                const labels = response.data.data;
+                this.setState({
+                  labelList: labels
+                })
+              } else {
 
-            }
-        });
+              }
+          })
     }
+
 
     //标签去重
     //TODO 可以通过es6的set直接去重
     noRepeat = (data) => {
-        if (data.length === 0) return [];
+        if (!data) return [];
         const arr = [];
         data.map((item) => {
-            if (item.labels && item.labels.length) {
-                item.labels.map((vitem) => {
+            if (item.categoryname && item.categoryname.split(",").length) {
+                item.categoryname.split(",").map((vitem) => {
                     arr.push(vitem);
                     return ''
                 })
@@ -128,11 +114,11 @@ export default class Home extends Component {
 
     //改变页码
     pageChange = (page) => {
-        let nowPageIssues = this.state.list.slice(0 + this.state.pageNum * (page - 1), this.state.pageNum + this.state.pageNum * (page - 1))
+        console.log(page)
         this.setState({
-            page,
-            nowPageIssues
-        })
+            page
+        },() => this.getBlogList())
+
     }
 
 
@@ -143,7 +129,7 @@ export default class Home extends Component {
             return
         }
         data.map((item) => {
-            item.created_at = Timetransfer(item.created_at);
+            item.createtime = Timetransfer(item.createtime);
             return ''
         })
         return data;
@@ -162,7 +148,7 @@ export default class Home extends Component {
 
 
     render() {
-        const {list, labelList, nowPageIssues, page, pageNum} = this.state;
+        const { blogList, labelList } = this.state;
         return (
             <Row className='main-container'>
                 <Row className="l_box">
@@ -181,9 +167,9 @@ export default class Home extends Component {
                                 {
                                     labelList.map((value, key) => {
                                         return (
-                                            <Link key={key} to={`/cloud/${value.name}`}
+                                            <Link key={key} to={`/cloud/${value.categoryname}`}
                                                   style={{backgroundColor: `#${value.color}`}}>
-                                                {value.name}
+                                                {value.categoryname}
                                             </Link>
                                         )
                                     })
@@ -194,11 +180,11 @@ export default class Home extends Component {
                             <h2>最近文章</h2>
                             <ul>
                                 {
-                                    list.map((item, key) => {
+                                  blogList.map((item, key) => {
                                         if (key < 9) {
                                             return (
                                                 <li key={key}>
-                                                    <Link to={`/blog/${item.number}`}>{item.title}</Link>
+                                                    <Link to={`/blog/${item.id}`}>{item.title}</Link>
                                                 </li>
                                             )
                                         }
@@ -236,14 +222,14 @@ export default class Home extends Component {
                     >
                         {/*数据列表*/}
                         {
-                            this.state.nowPageIssues && this.state.nowPageIssues.length ?
-                                this.state.nowPageIssues.map((item, index) => {
-                                    const time = Timetransfer(item.created_at)
+                            blogList && blogList.length ?
+                                blogList.map((item, index) => {
+                                    const time = Timetransfer(item.createtime)
 
                                     return (
                                         <Card key={index} className='blog-content'>
                                             <Meta
-                                                title={<h3><Link to={`/blog/${item.number}`}>{item.title}</Link></h3>}
+                                                title={<h3><Link to={`/blog/${item.id}`}>{item.title}</Link></h3>}
                                                 description={
                                                     <Row>
                                                         <Row className='blog-info'>
@@ -252,10 +238,10 @@ export default class Home extends Component {
                                                             <Col>
                                                                 <Icon type='tags-o' className='list-icon'/>
                                                                 {
-                                                                    item.labels && item.labels.length ?
-                                                                        item.labels.map((val, key) => {
+                                                                    item.categoryName ?
+                                                                        item.categoryName.split(",").map((val, key) => {
                                                                             return <Tag key={key} className='blog-tag'>
-                                                                                {val.name}
+                                                                                {val}
                                                                             </Tag>
                                                                         })
                                                                         : null
@@ -263,15 +249,15 @@ export default class Home extends Component {
                                                             </Col>
 
                                                             <Col className='blog-read-count'>
-                                                                阅读数: 999
+                                                                阅读数: { item.visits }
                                                             </Col>
                                                             <Col className='blog-read-count'>
-                                                                评论: 66
+                                                                评论: { item.comment }
                                                             </Col>
 
                                                         </Row>
                                                         <Row>
-                                                            <Col className='blog-list-body'>{item.body}</Col>
+                                                            <Col className='blog-list-body'>{item.summary}</Col>
                                                         </Row>
                                                     </Row>
                                                 }
@@ -284,9 +270,12 @@ export default class Home extends Component {
                         {/*分页*/}
                         <Pagination
                             current={this.state.page}
-                            onChange={(page)=>this.pageChange(page)}
-                            total={this.state.list.length}
+                            defaultCurrent={this.state.page}
+                            defaultPageSize={this.state.pageSize}
+                            total={this.state.total}
                             hideOnSinglePage={true} //指定只有1页时是否隐藏分页条
+                            onChange={(page)=>this.pageChange(page)}
+                            showQuickJumper
                             className='pagination'
                         />
                     </QueueAnim>
