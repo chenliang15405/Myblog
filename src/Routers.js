@@ -9,7 +9,9 @@ import Blog from './pages/blog/Blog'
 export default class Routers extends Component {
 
     render() {
-        return (
+
+      return (
+        // /*<HashRouter basename='/blog'>*/  可能需要
             <HashRouter>
                 <App>
                     <Switch>

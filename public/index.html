@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
-  <link rel="shortcut icon" href="%PUBLIC_URL%/icon.ico">
+  <link rel="shortcut icon" href="./icon.ico">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <meta name="theme-color" content="#000000">
   <meta name="keywords" content="读心个人博客，JavaScript，HTML5,CSS3,前端开发,用户体验" />
@@ -18,10 +18,10 @@
   <meta name="msvalidate.01" content="3A4761EBBA92E60C32E709E55E374471" />
   <meta name="baidu-site-verification" content="TriFfN2miV" />
   <meta name="google-site-verification" content="PLDoNhfii8sQpkfsy81WG8Mfn0fBrs3NMyFQWcioxmo" />
-  <link rel="manifest" href="%PUBLIC_URL%/manifest.json">
+  <link rel="manifest" href="./manifest.json">
   <title>读心,读自己</title>
-  <link rel="stylesheet" href="/live/css/live2d.css" />
-  <base href="/">
+  <link rel="stylesheet" href="./live/css/live2d.css" />
+  <!-- <base href="/"> -->
 </head>
 <body>
 <noscript>
@@ -41,15 +41,15 @@
 <script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
 <script type="text/javascript">
     var message_Path = 'live/';
-    var home_Path = 'http://wyysz.com/'; //TODO 此处修改为你的域名，必须带斜杠
+    var home_Path = 'http://132.232.104.247/'; //TODO 此处修改为你的域名，必须带斜杠
 </script>
-<script type="text/javascript" src="/live/js/live2d.js"></script>
-<script type="text/javascript" src="/live/js/message.js"></script>
+<script type="text/javascript" src="./live/js/live2d.js"></script>
+<script type="text/javascript" src="./live/js/message.js"></script>
 <script type="text/javascript">
-    loadlive2d("live2d", "/live/model/tia/model.json");
+    loadlive2d("live2d", "./live/model/tia/model.json");
 </script>
 <script>
-    (function () {
+    /*(function () {
         var bp = document.createElement('script');
         var curProtocol = window.location.protocol.split(':')[0];
 
@@ -61,7 +61,7 @@
         }
         var s = document.getElementsByTagName("script")[0];
         s.parentNode.insertBefore(bp, s);
-    })();
+    })();*/
 </script>
 <!--<script-->
         <!--type="text/javascript">var cnzz_protocol = (("https:" == document.location.protocol) ? "https://" : "http://"); document.write(unescape("%3Cspan id='cnzz_stat_icon_1276199744'%3E%3C/span%3E%3Cscript src='" + cnzz_protocol + "s5.cnzz.com/z_stat.php%3Fid%3D1276199744' type='text/javascript'%3E%3C/script%3E"));</script>-->

@@ -2,6 +2,7 @@
   "name": "react-boke",
   "version": "0.1.0",
   "private": true,
+  "homepage": "http://132.232.104.247/",
   "dependencies": {
     "antd": "^3.16.1",
     "axios": "^0.18.0",
