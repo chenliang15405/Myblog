@@ -3,13 +3,14 @@ import marked from 'marked';
 import hljs from 'highlight.js';
 import 'highlight.js/styles/monokai-sublime.css' //样式文件
 import {Link} from 'react-router-dom';
-import axios from 'axios'
 import {Card, message, Row, Col} from 'antd';
 
 import BlogInfoFooter from '../../components/BlogInfoFooter'
 import {TimetransferDetail} from '../../utils/TimeUtil'
 import '../../asserts/css/blogInfo.scss'
 import { rgbaColor } from '../../utils/Color'
+
+import { getBlogContent } from "../../api/blogInfo";
 
 /**
  * blog info 模块
@@ -46,23 +47,23 @@ export default class Blog extends Component {
 
 
     getBlogContent = (id) => {
-        const api = `http://localhost:9011/article/article/${id}`
-        axios.get(api)
-          .then(response => {
-              if(response.data.code === 20000) {
-                const data = response.data.data
-                //设置页面的title
-                document.title = data.title
-                console.log("data",data)
-                this.setState({
-                  content: data
-                })
-              }
-          })
-          .catch(err => {
-              console.log(err)
-              message.warning("文章不存在!");
-          })
+        // 获取数据
+        getBlogContent(id)
+            .then(response => {
+                if(response.code === 20000) {
+                    const data = response.data
+                    //设置页面的title
+                    document.title = data.title
+                    // console.log("data",data)
+                    this.setState({
+                      content: data
+                    })
+                  }
+            })
+            .catch(err => {
+                console.log(err)
+                message.warning("文章不存在!");
+            })
     }
 
 

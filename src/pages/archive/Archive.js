@@ -1,10 +1,10 @@
 import React, {Component} from 'react'
 import {List, message, Avatar, Spin, Icon,Timeline,BackTop} from 'antd';
-import axios from 'axios'
 
 import '../../asserts/css/archive.scss'
 import {Timetransfer} from "../../utils/TimeUtil";
 
+import { getBlogArchiveList } from '../../api/archive'
 
 //设置icon的内容和type
 const IconText = ({type, text}) => (
@@ -93,28 +93,27 @@ export default class Archive extends Component {
 
     // 获取归档博客列表
     getBlogArchiveList = () => {
-      const { archive } = this.state
+        const { archive } = this.state
         // 页面每次加载6个
-      const api = `http://localhost:9011/article/article/archive/${archive.page}/${archive.pageSize}`
-      axios.get(api)
-        .then(response => {
-            // console.log(`getBlogArchiveList: `,response)
-            if(response.data.code === 20000) {
-                const data = response.data.data
-                archive.total = data.total  // 需要先给对象的属性赋值，然后再setState，否则覆盖该对象其他的值
-                archive.page = archive.page + 1 //滚屏加载则+1
-                let list = this.formatTime(data.rows)
-                list = this.state.data.concat(list) // 拼接之前的list
-                this.setState({
-                    data: list,
-                    archive,
-                    loading:false
-                })
-            }
-        })
-        .catch(err => {
-          message.error('Server is not available');
-        })
+        getBlogArchiveList(archive.page, archive.pageSize)
+            .then(response => {
+                // console.log(`getBlogArchiveList: `,response)
+                if(response.code === 20000) {
+                    const data = response.data
+                    archive.total = data.total  // 需要先给对象的属性赋值，然后再setState，否则覆盖该对象其他的值
+                    archive.page = archive.page + 1 //滚屏加载则+1
+                    let list = this.formatTime(data.rows)
+                    list = this.state.data.concat(list) // 拼接之前的list
+                    this.setState({
+                      data: list,
+                      archive,
+                      loading:false
+                    })
+                }
+            })
+            .catch(err => {
+              message.error('Server is not available');
+            })
     }
 
     //获取到滚动条的高度
@@ -159,7 +158,7 @@ export default class Archive extends Component {
                                 {item.createtime}
                                 <List.Item
                                     key={item.title}
-                                    actions={[<IconText type="star-o" text="156" />, <IconText type="like-o" text="156" />, <IconText type="message" text="2" />]}
+                                    actions={[<IconText type="eye-o" text={item.thumbup} />, <IconText type="like-o" text={item.thumbup} />, <IconText type="message" text={item.comment} />]}
                                     extra={<img className='blogImage' alt="images"
                                                 src={item.image} />}
                                 >

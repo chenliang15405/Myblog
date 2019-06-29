@@ -1,7 +1,6 @@
 import React, {Component} from 'react';
 import {Row, Card, Icon, Tag, Col, Pagination, BackTop} from 'antd'
 import { Link } from 'react-router-dom';
-import axios from 'axios'
 import QueueAnim from 'rc-queue-anim';
 
 
@@ -11,6 +10,8 @@ import TodayPoetry from '../../components/TodayPoetry'
 import Banner from '../../components/Banner'
 
 import {Timetransfer} from "../../utils/TimeUtil";
+
+import { getBlogList, getBlogLabels } from "../../api/home";
 
 import '../../asserts/css/home.scss'
 
@@ -51,34 +52,38 @@ export default class Home extends Component {
     getBlogList = () => {
         const {page, pageSize} = this.state;
 
-        axios.post(`http://localhost:9011/article/article/search/${page}/${pageSize}`,{})
+        getBlogList(page, pageSize, {})
           .then(response => {
             console.log("article : ",response)
-            if(response.data.code === 20000) {
-                const data = response.data.data
-                const list = this.formatTime(data.rows)
+            if(response.code === 20000) {
+              const data = response.data
+              const list = this.formatTime(data.rows)
 
-                this.setState({
-                  total: data.total,
-                  blogList: list
-                })
-             }
+              this.setState({
+                total: data.total,
+                blogList: list
+              })
+            }
+          })
+          .catch(err => {
+              console.log("getBlogList err", err)
           })
     }
 
-
+    // 获取文章分类
     getBlogLabels = () => {
-        axios.get(`http://localhost:9011/category/category/`)
+        getBlogLabels()
           .then(response => {
-              if(response.data.code === 20000) {
+              if(response.code === 20000) {
                   console.log("labels: ",response)
-                const labels = response.data.data;
-                this.setState({
-                  labelList: labels
-                })
-              } else {
-
+                  const labels = response.data;
+                  this.setState({
+                    labelList: labels
+                  })
               }
+          })
+          .catch(err => {
+              console.log("getBlogLabels err",err)
           })
     }
 
