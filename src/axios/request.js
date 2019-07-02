@@ -32,10 +32,10 @@ service.interceptors.response.use(config => {
 // respone拦截器
 service.interceptors.response.use(response => {
     /**
-     * code为非000000是抛错 可结合自己业务进行修改
+     * code为非20000是抛错 可结合自己业务进行修改
      */
     const resp = response.data
-    if (resp.code !== 20000 || resp.code !== "20000") {
+    if (resp.code === 20000 || resp.code === "20000") {
       // console.log("interceptors: response",resp)
       // message.info(resp.message, 2);
       return resp

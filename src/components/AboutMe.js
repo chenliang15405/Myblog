@@ -9,6 +9,7 @@ export default class AboutMe extends Component {
 
 
     render() {
+        const { avatar, username, email, title, motto, birthday, address } = this.props.blogger
         return <Card className='aboutMe'>
 
             <div className='avatar'>
@@ -16,13 +17,13 @@ export default class AboutMe extends Component {
             </div>
             <div className='description'>
                 <p>
-                    <b>啦啦啦</b>
+                    <b>{ username }</b>
                 </p>
                 <p>
-                    <b>全栈工程师</b>
+                    <b>{ title }</b>
                 </p>
-                <p>null@null.com</p>
-                <p>读书，读自己！</p>
+                <p>{ email }</p>
+                <p>{ motto }</p>
             </div>
 
         </Card>

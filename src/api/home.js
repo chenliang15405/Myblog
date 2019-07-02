@@ -16,7 +16,15 @@ const getBlogLabels = () => {
     })
 }
 
+const getBloggerInfo = () => {
+    return fetch({
+        url: `/user/user/admin/`,
+        method: 'get'
+    })
+}
+
 export {
     getBlogList,
-    getBlogLabels
+    getBlogLabels,
+    getBloggerInfo
 }

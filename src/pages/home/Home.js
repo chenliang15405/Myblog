@@ -11,7 +11,7 @@ import Banner from '../../components/Banner'
 
 import {Timetransfer} from "../../utils/TimeUtil";
 
-import { getBlogList, getBlogLabels } from "../../api/home";
+import { getBlogList, getBlogLabels, getBloggerInfo } from "../../api/home";
 
 import '../../asserts/css/home.scss'
 
@@ -27,17 +27,27 @@ export default class Home extends Component {
             labelList: [],         //标签列表
             page: 1,        // 当前选中的页码
             pageSize: 6,     // 一页的数量
+            blogger:{
+                avatar: '',
+                username: '',
+                title: '',
+                email: '',
+                motto: '',
+                address: '',
+                birthday: '',
+            }
         }
     }
 
 
     componentDidMount() {
+        this.getBloggerInfo() // 获取我的信息
 
-        this.getBlogList(); //获取博客文章列表
+        this.getBlogList() //获取博客文章列表
 
         document.title = "唐宋"
 
-        this.getBlogLabels();//获取博客标签列表
+        this.getBlogLabels() //获取博客标签列表
 
         //监听页面高度
         window.addEventListener("scroll",this.handlScroll)
@@ -84,6 +94,33 @@ export default class Home extends Component {
           })
           .catch(err => {
               console.log("getBlogLabels err",err)
+          })
+    }
+
+    // 获取我的信息
+    getBloggerInfo = () => {
+        //登录，获取token
+        getBloggerInfo()
+          .then(response => {
+              const data = response.data
+              data.createDate = Timetransfer(data.createDate)
+              data.birthday = Timetransfer(data.birthday)
+              const {avatar, username, title, email, motto, address, birthday} = data
+              const blogger = {
+                    avatar,
+                    username,
+                    title,
+                    email,
+                    motto,
+                    address,
+                    birthday
+              }
+              this.setState({
+                  blogger
+              })
+          })
+          .catch(err => {
+              console.log("blogger err: ", err)
           })
     }
 
@@ -164,7 +201,7 @@ export default class Home extends Component {
                         ]}
                     >
                         {/*about me*/}
-                        <AboutMe/>
+                        <AboutMe blogger={{...this.state.blogger}}/>
 
                         <Card bordered={false} className="catagory">
                             <h2>文章分类</h2>

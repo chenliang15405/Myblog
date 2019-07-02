@@ -38,6 +38,8 @@ export default class Blog extends Component {
 
 
     //初次render时不执行，只有在父组件传递的props改变才执行
+    // 如果父组件传递的值是ajax获取的，则需要使用这个生命周期函数获取props，否则获取不到
+    //  在组件接收新props时调用。初始渲染不调用此方法。
     componentWillReceiveProps(nextProps) {
         if (this.props.match.params.id !== nextProps.match.params.id) {
             //状态改变的时候，采取执行加载数据的函数，否则不执行，提高性能
