@@ -1,5 +1,8 @@
 import fetch from '../axios/request'
 
+/**
+ * 首页 api
+ */
 
 const getBlogList = (page, pageSize, data) => {
     return fetch({

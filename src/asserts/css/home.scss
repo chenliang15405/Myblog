@@ -316,7 +316,9 @@ $right-box-width: 68%;
   -ms-transform: translate(-50%,50px);
   -o-transform: translate(-50%,50px);
   transform: translate(-50%,50px);
+  width: 500px;
 }
+
 .blog-read-count {
   display: flex;
   align-items: center;

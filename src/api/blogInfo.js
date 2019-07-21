@@ -1,5 +1,10 @@
 import fetch from '../axios/request'
 
+/**
+ * 文章内容api
+ */
+
+
 export const getBlogContent = (id) => {
   return fetch({
       url: `/article/article/${id}`,

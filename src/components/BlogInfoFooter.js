@@ -2,6 +2,10 @@ import React, {Component} from 'react'
 import {Row, Col,Comment, Avatar,Input,Select,Form,Button} from 'antd'
 import {Link} from 'react-router-dom';
 import axios from 'axios'
+
+import { createComment, getCommentsList } from '../api/comment'
+import { getLabelListByBlogId } from '../api/tag'
+
 const Option = Select.Option;
 const TextArea = Input.TextArea;
 
@@ -21,17 +25,17 @@ const selectAfter = (
     </Select>
 );
 //评论列表展示
-const ExampleComment = ({ children }) => (
+const ExampleComment = ({ children, userName, avatar, content}) => (
     <Comment
         actions={[<span>Reply to</span>]}
-        author={<a>Han Solo</a>}
+        author={<a>{userName}</a>}
         avatar={(
             <Avatar
-                src="https://zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png"
+                src={avatar}
                 alt="Han Solo"
             />
         )}
-        content={<p>We supply a series of design principles, practical patterns and high quality design resources (Sketch and Axure).</p>}
+        content={<p>{content}</p>}
     >
         {children}
     </Comment>
@@ -57,6 +61,8 @@ const Editor = ({
         </Form.Item>
     </div>
 );
+
+
 /**
  * blog info footer
  */
@@ -67,35 +73,60 @@ export default class BlogInfoFooter extends Component {
         super(props)
         this.state = {
             labels:[],
-            submitting:false, //提交评论时，按钮是否loading
-            commentValue : '' //评论的文本
+            submitting: false, //提交评论时，按钮是否loading
+            commentValue : '', //评论的文本
+            blogId: props.blogId,
+            userId: '',
+            commentLevel: 1,
+            commentList:[],
+            commentTotalNum: 0,
+            page: 1,
+            size: 6
         }
     }
 
 
     componentWillMount() {
        // 获取标签列表
-      const blogId = this.props.blogId
-      console.log("blogid ",this.props.blogId)
-      const api = `http://localhost:9011/tag/label/blog/${blogId}`
-      axios.get(api)
-        .then(response => {
-            if(response.data.code === 20000) {
-              const data = response.data.data
-              console.log("blog_label:",data)
-                this.setState({
-                    labels: data
-                })
-            }
-        })
-        .catch(err => {
-            console.log("blog_label error: " ,err)
-        })
+      this.getLabelList()
+
+      // 获取评论列表
+      this.getCommentsList()
     }
 
 
+    // 获取标签列表
+    getLabelList = async () => {
+      const { blogId } = this.state
+      console.log("blogid ",this.props.blogId)
+      try {
+          const response = await getLabelListByBlogId(blogId)
+          if(response.code === 20000) {
+            const data = response.data
+            console.log("blog_label:", data)
+            this.setState({
+                labels: data
+            })
+          }
+      } catch (e) {
+          console.log('getLabelList error', e)
+      }
+    }
 
-
+    // 获取评论列表
+    getCommentsList = async () => {
+      try {
+          const { blogId, page, size } = this.state
+          const resp = await getCommentsList(blogId, page, size)
+          this.setState({
+              commentList: resp.data.rows,
+              commentTotalNum: resp.data.total
+          })
+        console.log('comment list',resp)
+      } catch (e) {
+          console.log('getCommentsList error', e)
+      }
+    }
 
     //输入评论
     handleChange = (e) => {
@@ -105,8 +136,22 @@ export default class BlogInfoFooter extends Component {
     }
 
     //提交评论
-    handleSubmit = () => {
-        console.log('handleSubmit')
+    handleSubmit = async () => {
+      console.log('handleSubmit', this.state.commentValue)
+      const { blogId, commentValue, userId, commentLevel} = this.state
+      const data = {
+          blogId,
+          content: commentValue,
+          userId,
+          commentLevel
+      }
+      try {
+          const resp = await createComment(data)
+          console.log('handleSubmit resp', resp)
+      } catch (e) {
+          console.log('handleSubmit comment error', e)
+      }
+
     }
 
     //触发用户信息
@@ -125,7 +170,7 @@ export default class BlogInfoFooter extends Component {
     }
 
     render() {
-        const {  submitting, commentValue } = this.state;
+        const {  submitting, commentValue, commentList, commentTotalNum } = this.state;
         return (
             <Row className='blog-info-footer'>
                 <Row className='blog-footer-tags'>
@@ -213,6 +258,7 @@ export default class BlogInfoFooter extends Component {
                         <Input addonBefore={selectBefore} allowClear addonAfter={selectAfter}  placeholder="网址(选填)"/>
                     </div>
                 </div>
+
                 <Row className='comment-post-box'>
                     <div className='comment-title'>
                         <i></i>
@@ -231,7 +277,8 @@ export default class BlogInfoFooter extends Component {
                         </a>
                     </div>
                     <div>
-                        <Comment
+                      {/*评论中中集成表情*/}
+                       <Comment
                             content={(
                                 <Editor
                                     onChange={this.handleChange}
@@ -253,15 +300,37 @@ export default class BlogInfoFooter extends Component {
                     <div className='comment-list-title'>
                         <span>评论列表：</span>
                         <i className='iconfont'>&#xe7f4;</i>
-                        <span>99</span>
+                        <span>{commentTotalNum}</span>
                     </div>
                     <div className='comment-list'>
-                        <ExampleComment>
-                            <ExampleComment>
-                                <ExampleComment />
-                                <ExampleComment />
-                            </ExampleComment>
-                        </ExampleComment>
+                        {
+                            // TODO 在后端根据parentId 已经查询到  List<Comment> 这种集合
+                            commentList.map((item,key) => {
+                                return (
+                                      <ExampleComment key={key} userName={item.userName} avatar={item.avatar} content={item.content}>
+                                          {
+                                            item.childrens && item.childrens.length > 0 ? item.childrens.map((secondItem,secondKey) => {
+                                              return (
+                                                <ExampleComment key={secondKey} userName={secondItem.userName} avatar={secondItem.avatar} content={secondItem.content}>
+                                                  {
+                                                    secondItem.childrens && secondItem.childrens.length > 0 ? secondItem.childrens.map((threeItem,threeKey) => {
+                                                      return (
+                                                        <ExampleComment key={threeKey} userName={threeItem.userName} avatar={threeItem.avatar} content={threeItem.content}/>
+                                                      )
+                                                    })
+                                                      : null
+                                                  }
+                                                </ExampleComment>
+                                              )
+                                            })
+                                              : null
+                                          }
+                                      </ExampleComment>
+
+                                )
+                            })
+
+                        }
                     </div>
                 </Row>
             </Row>
