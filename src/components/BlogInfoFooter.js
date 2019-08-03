@@ -112,10 +112,12 @@ export default class BlogInfoFooter extends Component {
       try {
           const { blogId, page, size } = this.state
           const resp = await getCommentsList(blogId, page, size)
-          this.setState({
+          if(resp.code === 20000) {
+            this.setState({
               commentList: resp.data.rows,
               commentTotalNum: resp.data.total
-          })
+            })
+          }
         // console.log('comment list',resp)
       } catch (e) {
           console.log('getCommentsList error', e)
@@ -143,6 +145,7 @@ export default class BlogInfoFooter extends Component {
           const resp = await createComment(data)
           // console.log('handleSubmit resp', resp)
           if (resp.code === 20000) {
+             this.setState({commentValue: ''})
              this.getCommentsList()
           }
       } catch (e) {
