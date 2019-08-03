@@ -59,25 +59,23 @@ export default class Home extends Component {
 
 
     //获取博客文章列表
-    getBlogList = () => {
+    getBlogList = async () => {
         const {page, pageSize} = this.state;
+        try {
+          const response = await getBlogList(page, pageSize, {})
+          console.log("article : ", response)
+          if (response.code === 20000) {
+            const data = response.data
+            const list = this.formatTime(data.rows)
 
-        getBlogList(page, pageSize, {})
-          .then(response => {
-            console.log("article : ",response)
-            if(response.code === 20000) {
-              const data = response.data
-              const list = this.formatTime(data.rows)
-
-              this.setState({
-                total: data.total,
-                blogList: list
-              })
-            }
-          })
-          .catch(err => {
-              console.log("getBlogList err", err)
-          })
+            this.setState({
+              total: data.total,
+              blogList: list
+            })
+          }
+        } catch (e) {
+          console.log("getBlogList error: ", e)
+        }
     }
 
     // 获取文章分类

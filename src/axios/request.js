@@ -39,6 +39,8 @@ service.interceptors.response.use(response => {
       // console.log("interceptors: response",resp)
       // message.info(resp.message, 2);
       return resp
+    } else if(resp.code === 20005 || resp.code === '20005'){
+      return resp
     } else {
       // 可以在这里直接返回response.data 方便后面处理
       return Promise.reject('error')

@@ -18,8 +18,20 @@ const getCommentsList = (blogId, page, size) => {
   })
 }
 
+const favoriteComment = (id, type) => {
+  return fetch({
+    url: `/comment/comment/favorite`,
+    method: 'post',
+    data: {
+      id,
+      type
+    }
+  })
+}
+
 
 export {
     createComment,
-    getCommentsList
+    getCommentsList,
+    favoriteComment
 }

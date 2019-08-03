@@ -1,9 +1,9 @@
 import React, {Component} from 'react'
-import {Row, Col,Comment, Avatar,Input,Select,Form,Button} from 'antd'
-import {Link} from 'react-router-dom';
-import axios from 'axios'
+import {Row, Col, Comment, Avatar, Input, Select, Form, Button, Tooltip, Icon, message} from 'antd'
+import {Link} from 'react-router-dom'
+import moment from 'moment'
 
-import { createComment, getCommentsList } from '../api/comment'
+import { createComment, getCommentsList, favoriteComment } from '../api/comment'
 import { getLabelListByBlogId } from '../api/tag'
 
 const Option = Select.Option;
@@ -24,10 +24,11 @@ const selectAfter = (
         <Option value=".org">.org</Option>
     </Select>
 );
+
 //评论列表展示
-const ExampleComment = ({ children, userName, avatar, content}) => (
+const ExampleComment = ({ children, userName, avatar, content, actions,createDate}) => (
     <Comment
-        actions={[<span>Reply to</span>]}
+        actions={actions}
         author={<a>{userName}</a>}
         avatar={(
             <Avatar
@@ -36,7 +37,19 @@ const ExampleComment = ({ children, userName, avatar, content}) => (
             />
         )}
         content={<p>{content}</p>}
+        datetime={
+          createDate != null ? <Tooltip title={moment(createDate).format('YYYY-MM-DD HH:mm:ss')}>
+                  <span>{moment(createDate).fromNow()}</span>
+             </Tooltip>
+            : null
+        }
     >
+
+        <div style={{marginLeft:'10px',flex:'1'}}>
+          <div>
+            <Input value={userName} placeholder="输入评论..." onFocus={() => this.handleFocus(this)} onChange={() => this.handleChange(this)} onPressEnter={ () => this.handlePressEnter(this)}/>
+          </div>
+        </div>
         {children}
     </Comment>
 );
@@ -78,10 +91,16 @@ export default class BlogInfoFooter extends Component {
             blogId: props.blogId,
             userId: '',
             commentLevel: 1,
+            parentId: null,
             commentList:[],
             commentTotalNum: 0,
             page: 1,
-            size: 6
+            size: 6,
+            likes: 0,
+            dislikes: 0,
+            action: null,
+            showReplyInput: false,
+            commentContent: ''
         }
     }
 
@@ -103,7 +122,7 @@ export default class BlogInfoFooter extends Component {
           const response = await getLabelListByBlogId(blogId)
           if(response.code === 20000) {
             const data = response.data
-            console.log("blog_label:", data)
+            // console.log("blog_label:", data)
             this.setState({
                 labels: data
             })
@@ -122,7 +141,7 @@ export default class BlogInfoFooter extends Component {
               commentList: resp.data.rows,
               commentTotalNum: resp.data.total
           })
-        console.log('comment list',resp)
+        // console.log('comment list',resp)
       } catch (e) {
           console.log('getCommentsList error', e)
       }
@@ -137,17 +156,20 @@ export default class BlogInfoFooter extends Component {
 
     //提交评论
     handleSubmit = async () => {
-      console.log('handleSubmit', this.state.commentValue)
-      const { blogId, commentValue, userId, commentLevel} = this.state
+      const { blogId, commentValue, userId, commentLevel, parentId} = this.state
       const data = {
           blogId,
           content: commentValue,
           userId,
+          parentId,
           commentLevel
       }
       try {
           const resp = await createComment(data)
           console.log('handleSubmit resp', resp)
+          if (resp.code === 20000) {
+             this.getCommentsList()
+          }
       } catch (e) {
           console.log('handleSubmit comment error', e)
       }
@@ -169,8 +191,65 @@ export default class BlogInfoFooter extends Component {
         })
     }
 
+    // 点赞
+    like = async (id) => {
+      // 点赞会将 action、id 、 ip 保存到redis里即保证了不重复点赞和动作，然后点赞次数+1到数据库，mq发送消息通知博主
+      const resp = await favoriteComment(id, 'like')
+      if(resp.code === 20000) {
+        this.getCommentsList()
+      } else if(resp.code === 20005) {
+        message.success(resp.message);
+      }
+    }
+
+    // 取消点赞
+    dislike = async (id) => {
+      const resp = await favoriteComment(id, 'dislike')
+      if(resp.code === 20000) {
+        this.getCommentsList()
+      } else if(resp.code === 20005) {
+        message.success(resp.message);
+      }
+    }
+
+    reply = () => {
+      this.setState({showReplyInput: true})
+    }
+
+  handleFocus = () => {
+
+  }
+
+
     render() {
-        const {  submitting, commentValue, commentList, commentTotalNum } = this.state;
+        const { submitting, commentValue, commentList, commentTotalNum } = this.state;
+
+        /*TODO react中最好不要直接在onClick={this.like} 这样绑定方法，否则会在加载时触发，最好使用箭头函数 onClick={()=>{this.like}}*/
+        const actions = (id, likes, dislikes, action) => [
+                <span>
+                    <Tooltip title="666">
+                      <Icon
+                        type="like"
+                        theme={action === 'like' ? 'filled' : 'outlined'}
+                        onClick={() => this.like(id)}
+                      />
+                    </Tooltip>
+                    <span style={{ paddingLeft: 8, cursor: 'auto' }}>{likes}</span>
+                  </span>,
+                  <span>
+                    <Tooltip title="999">
+                      <Icon
+                        type="dislike"
+                        theme={action === 'dislike' ? 'filled' : 'outlined'}
+                        onClick={() => this.dislike(id)}
+                      />
+                    </Tooltip>
+                    <span style={{ paddingLeft: 8, cursor: 'auto' }}>{dislikes}</span>
+                  </span>,
+                <span onClick={() => this.reply(id)}>Reply to</span>,
+          ]
+
+
         return (
             <Row className='blog-info-footer'>
                 <Row className='blog-footer-tags'>
@@ -277,7 +356,7 @@ export default class BlogInfoFooter extends Component {
                         </a>
                     </div>
                     <div>
-                      {/*评论中中集成表情*/}
+                      {/* TODO 评论中中集成表情*/}
                        <Comment
                             content={(
                                 <Editor
@@ -307,15 +386,15 @@ export default class BlogInfoFooter extends Component {
                             // TODO 在后端根据parentId 已经查询到  List<Comment> 这种集合
                             commentList.map((item,key) => {
                                 return (
-                                      <ExampleComment key={key} userName={item.userName} avatar={item.avatar} content={item.content}>
+                                      <ExampleComment actions={actions(item.id, item.likeNum, item.dislikeNum, item.action)} key={key} userName={item.userName} avatar={item.avatar} content={item.content} createDate={item.createDate}>
                                           {
                                             item.childrens && item.childrens.length > 0 ? item.childrens.map((secondItem,secondKey) => {
                                               return (
-                                                <ExampleComment key={secondKey} userName={secondItem.userName} avatar={secondItem.avatar} content={secondItem.content}>
+                                                <ExampleComment key={secondKey} userName={secondItem.userName} avatar={secondItem.avatar} content={secondItem.content} createDate={secondItem.createDate}>
                                                   {
                                                     secondItem.childrens && secondItem.childrens.length > 0 ? secondItem.childrens.map((threeItem,threeKey) => {
                                                       return (
-                                                        <ExampleComment key={threeKey} userName={threeItem.userName} avatar={threeItem.avatar} content={threeItem.content}/>
+                                                        <ExampleComment key={threeKey} userName={threeItem.userName} avatar={threeItem.avatar} content={threeItem.content} createDate={threeItem.createDate}/>
                                                       )
                                                     })
                                                       : null
