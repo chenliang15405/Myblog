@@ -29,9 +29,18 @@ const favoriteComment = (id, type) => {
   })
 }
 
+const replyComment = (data) => {
+  return fetch({
+    url: '/comment/comment/replyComment',
+    method: 'post',
+    data
+  })
+}
+
 
 export {
     createComment,
     getCommentsList,
-    favoriteComment
+    favoriteComment,
+    replyComment
 }

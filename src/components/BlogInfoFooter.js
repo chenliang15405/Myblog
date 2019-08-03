@@ -3,6 +3,8 @@ import {Row, Col, Comment, Avatar, Input, Select, Form, Button, Tooltip, Icon, m
 import {Link} from 'react-router-dom'
 import moment from 'moment'
 
+import ReplyArea from './ReplyArea'
+
 import { createComment, getCommentsList, favoriteComment } from '../api/comment'
 import { getLabelListByBlogId } from '../api/tag'
 
@@ -25,34 +27,6 @@ const selectAfter = (
     </Select>
 );
 
-//评论列表展示
-const ExampleComment = ({ children, userName, avatar, content, actions,createDate}) => (
-    <Comment
-        actions={actions}
-        author={<a>{userName}</a>}
-        avatar={(
-            <Avatar
-                src={avatar}
-                alt="Han Solo"
-            />
-        )}
-        content={<p>{content}</p>}
-        datetime={
-          createDate != null ? <Tooltip title={moment(createDate).format('YYYY-MM-DD HH:mm:ss')}>
-                  <span>{moment(createDate).fromNow()}</span>
-             </Tooltip>
-            : null
-        }
-    >
-
-        <div style={{marginLeft:'10px',flex:'1'}}>
-          <div>
-            <Input value={userName} placeholder="输入评论..." onFocus={() => this.handleFocus(this)} onChange={() => this.handleChange(this)} onPressEnter={ () => this.handlePressEnter(this)}/>
-          </div>
-        </div>
-        {children}
-    </Comment>
-);
 
 //评论
 const Editor = ({
@@ -74,6 +48,7 @@ const Editor = ({
         </Form.Item>
     </div>
 );
+
 
 
 /**
@@ -100,7 +75,7 @@ export default class BlogInfoFooter extends Component {
             dislikes: 0,
             action: null,
             showReplyInput: false,
-            commentContent: ''
+            showReplyInputId: ''
         }
     }
 
@@ -117,7 +92,7 @@ export default class BlogInfoFooter extends Component {
     // 获取标签列表
     getLabelList = async () => {
       const { blogId } = this.state
-      console.log("blogid ",this.props.blogId)
+      // console.log("blogid ",this.props.blogId)
       try {
           const response = await getLabelListByBlogId(blogId)
           if(response.code === 20000) {
@@ -166,7 +141,7 @@ export default class BlogInfoFooter extends Component {
       }
       try {
           const resp = await createComment(data)
-          console.log('handleSubmit resp', resp)
+          // console.log('handleSubmit resp', resp)
           if (resp.code === 20000) {
              this.getCommentsList()
           }
@@ -212,17 +187,21 @@ export default class BlogInfoFooter extends Component {
       }
     }
 
-    reply = () => {
-      this.setState({showReplyInput: true})
+    reply = (id) => {
+      this.setState({
+        showReplyInput: !this.state.showReplyInput,
+        showReplyInputId: id
+      })
     }
 
-  handleFocus = () => {
+    closeReplayInput = () => {
+      this.setState({showReplyInput: false})
+    }
 
-  }
 
 
     render() {
-        const { submitting, commentValue, commentList, commentTotalNum } = this.state;
+        const { submitting, commentValue, commentList, commentTotalNum, showReplyInput, showReplyInputId} = this.state;
 
         /*TODO react中最好不要直接在onClick={this.like} 这样绑定方法，否则会在加载时触发，最好使用箭头函数 onClick={()=>{this.like}}*/
         const actions = (id, likes, dislikes, action) => [
@@ -246,8 +225,37 @@ export default class BlogInfoFooter extends Component {
                     </Tooltip>
                     <span style={{ paddingLeft: 8, cursor: 'auto' }}>{dislikes}</span>
                   </span>,
-                <span onClick={() => this.reply(id)}>Reply to</span>,
+                  <span onClick={() => this.reply(id)}>{showReplyInput ? 'Cancel' : 'Reply to'}</span>,
           ]
+
+        //评论列表展示
+        const ExampleComment = ({ children, userName, avatar, content, actions,createDate, showReplyInput, showReplyInputId, id}) => (
+          <Comment
+            actions={actions}
+            author={<a>{userName}</a>}
+            avatar={(
+              <Avatar
+                src={avatar}
+                alt="Han Solo"
+              />
+            )}
+            content={<p>{content}</p>}
+            datetime={
+              createDate != null ? <Tooltip title={moment(createDate).format('YYYY-MM-DD HH:mm:ss')}>
+                  <span>{moment(createDate).fromNow()}</span>
+                </Tooltip>
+                : null
+            }
+          >
+            {
+              showReplyInput && showReplyInputId === id ?
+                <ReplyArea commentId={id} refreshCommentList={() => this.getCommentsList()} closeShowInput={() => this.closeReplayInput()}/>
+                : null
+            }
+            {children}
+          </Comment>
+        );
+
 
 
         return (
@@ -386,15 +394,15 @@ export default class BlogInfoFooter extends Component {
                             // TODO 在后端根据parentId 已经查询到  List<Comment> 这种集合
                             commentList.map((item,key) => {
                                 return (
-                                      <ExampleComment actions={actions(item.id, item.likeNum, item.dislikeNum, item.action)} key={key} userName={item.userName} avatar={item.avatar} content={item.content} createDate={item.createDate}>
+                                      <ExampleComment actions={actions(item.id, item.likeNum, item.dislikeNum, item.action)} key={key} userName={item.userName} avatar={item.avatar} content={item.content} createDate={item.createDate} showReplyInput={showReplyInput} showReplyInputId={showReplyInputId} id={item.id}>
                                           {
                                             item.childrens && item.childrens.length > 0 ? item.childrens.map((secondItem,secondKey) => {
                                               return (
-                                                <ExampleComment key={secondKey} userName={secondItem.userName} avatar={secondItem.avatar} content={secondItem.content} createDate={secondItem.createDate}>
+                                                <ExampleComment actions={actions(secondItem.id, secondItem.likeNum, secondItem.dislikeNum, secondItem.action)} key={secondKey} userName={secondItem.userName} avatar={secondItem.avatar} content={secondItem.content} createDate={secondItem.createDate} showReplyInput={showReplyInput} showReplyInputId={showReplyInputId} id={secondItem.id}>
                                                   {
                                                     secondItem.childrens && secondItem.childrens.length > 0 ? secondItem.childrens.map((threeItem,threeKey) => {
                                                       return (
-                                                        <ExampleComment key={threeKey} userName={threeItem.userName} avatar={threeItem.avatar} content={threeItem.content} createDate={threeItem.createDate}/>
+                                                        <ExampleComment actions={actions(threeItem.id, threeItem.likeNum, threeItem.dislikeNum, threeItem.action)} key={threeKey} userName={threeItem.userName} avatar={threeItem.avatar} content={threeItem.content} createDate={threeItem.createDate} showReplyInput={showReplyInput} showReplyInputId={showReplyInputId} id={threeItem.id}/>
                                                       )
                                                     })
                                                       : null
