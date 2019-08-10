@@ -146,7 +146,10 @@ export default class BlogInfoFooter extends Component {
           // console.log('handleSubmit resp', resp)
           if (resp.code === 20000) {
              this.setState({commentValue: ''})
+             message.success("评论已提交")
              this.getCommentsList()
+          } else {
+             message.error("评论失败，请再试一次")
           }
       } catch (e) {
           console.log('handleSubmit comment error', e)
@@ -280,8 +283,8 @@ export default class BlogInfoFooter extends Component {
                         文章版权及转载声明：
                     </div>
                     <div className='copy-right-statement'>
-                        <p>作者:  <a href="http://www.baidu.com" style={{color:'red'}}>xxxx</a> ,{window.location.href},发布于 (2019-01-01)</p>
-                        <p>文章转载或复制请注明出处<a href="http://www.baidu.com" style={{color:'red'}}> 唐宋个人博客</a></p>
+                        <p>作者:  <a href="http://localhost:3000/" style={{color:'red'}}>唐宋</a> ,{window.location.href},发布于 ({this.props.createDate})</p>
+                        <p>文章转载或复制请注明出处<a href="http://localhost:3000/" style={{color:'red'}}> 唐宋个人博客</a></p>
                     </div>
                 </Row>
                 <Row className='share-great'>

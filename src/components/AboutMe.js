@@ -2,14 +2,14 @@ import React, {Component} from 'react'
 
 import {Card} from 'antd'
 
-import avatar from '../asserts/images/4.jpg'
-
-
+/**
+ *  博主Card
+ */
 export default class AboutMe extends Component {
 
 
     render() {
-        const { avatar, username, email, title, motto, birthday, address } = this.props.blogger
+        const { avatar, username, email, title, motto } = this.props.blogger
         return <Card className='aboutMe'>
 
             <div className='avatar'>
@@ -17,7 +17,7 @@ export default class AboutMe extends Component {
             </div>
             <div className='description'>
                 <p>
-                    <b>{ username }</b>
+                    <b><a href="https://github.com/chenliang15405">{ username }</a></b>
                 </p>
                 <p>
                     <b>{ title }</b>

@@ -235,9 +235,9 @@ export default class Home extends Component {
                         </Card>
 
                         {/*友情连接*/}
-                        <FLink/>
+                        <FLink />
                         {/*TODO 目前是今日诗词，后面可以通过爬虫或者接口获取CSDN或者简书今日推荐的技术文章*/}
-                        <TodayPoetry/>
+                        <TodayPoetry />
                     </QueueAnim>
                 </Row>
 
@@ -252,8 +252,10 @@ export default class Home extends Component {
                 </Row>
 
                 <Row className='r_box'>
+
                     {/*轮播*/}
-                    <Banner/>
+                    <Banner />
+
                     <QueueAnim
                         animConfig={[
                             {opacity: [1, 0], translateY: [0, 150]},

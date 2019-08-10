@@ -28,25 +28,25 @@ export default class Banner extends Component {
                 <div className='bannerList'>
                     <img src={img2} alt=""/>
                     <div className='banner-description'>
-                        <h3>我这个人走的很慢，但我从不后退</h3>
+                        <h3>牛羊才成群结队，猛兽总是独行</h3>
                     </div>
                 </div>
                 <div className='bannerList'>
                     <img src={img3} alt=""/>
                     <div className='banner-description'>
-                        <h3>索取，只有在一个场合才能越多越好，那就是读书</h3>
+                        <h3>迷茫，只不过是你的才华配不上你的梦想</h3>
                     </div>
                 </div>
                 <div className='bannerList'>
                     <img src={img4} alt=""/>
                     <div className='banner-description'>
-                        <h3>先相信自己，然后别人才会相信你</h3>
+                        <h3>惟沉默是最高的轻蔑  ——鲁迅</h3>
                     </div>
                 </div>
                 <div className='bannerList'>
                     <img src={img5} alt=""/>
                     <div className='banner-description'>
-                        <h3>战斗吧！瓦斯塔亚，断剑重铸之日，骑士归来之时</h3>
+                        <h3>一个人如果没有梦想，跟无忧无虑有什么区别呢？</h3>
                     </div>
                 </div>
 

@@ -1,5 +1,6 @@
 import React, {Component} from 'react'
 import {List, message, Avatar, Spin, Icon,Timeline,BackTop} from 'antd';
+import { Link } from 'react-router-dom';
 
 import '../../asserts/css/archive.scss'
 import {Timetransfer} from "../../utils/TimeUtil";
@@ -39,7 +40,7 @@ export default class Archive extends Component {
     }
 
     componentDidMount() {
-        document.title = "归档"
+        document.title = "唐宋-归档"
 
         //监听页面高度
         window.addEventListener('scroll', this.onScrollHandle);
@@ -68,13 +69,13 @@ export default class Archive extends Component {
 
     // 处理滚屏无限加载
     loadDataWithScroll = (isBottom) => {
-        let { data,archive,hasMore } = this.state
+        let { data, archive, hasMore } = this.state
         if(isBottom){
             this.setState({
                 loading: true,
             });
-            console.log(data.length)
-            console.log(data)
+            // console.log(data.length)
+            // console.log(data)
             if (data.length >= archive.total) {
                 message.warning('Infinite List loaded all');
                 this.setState({
@@ -164,7 +165,7 @@ export default class Archive extends Component {
                                 >
                                     <List.Item.Meta
                                         avatar={<Avatar src={item.avatar}/>}
-                                        title={<a href={item.url}>{item.title}</a>}
+                                        title={<h4><Link className='archiveTitle' to={`/blog/${item.id}`}>{item.title}</Link></h4>}
                                         description={<p>分类：{item.categoryName}</p>}
                                     />
                                     {item.summary}

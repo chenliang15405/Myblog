@@ -12,7 +12,7 @@ const service = axios.create({
 
 // 配置请求拦截器
 service.interceptors.request.use(config => {
-  message.loading('加载中',1)              // loading组件，显示文字加载中，自动关闭延时1s
+  // message.loading('加载中',1)              // loading组件，显示文字加载中，自动关闭延时1s
   console.log('request go');
   return config;
 }, err => {

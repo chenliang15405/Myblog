@@ -117,7 +117,7 @@ export default class Blog extends Component {
                     </Card>
                     
                     {/*博客footer*/}
-                    <BlogInfoFooter blogId={this.state.blogId}/>
+                    <BlogInfoFooter blogId={this.state.blogId} createDate={TimetransferDetail(content.updatetime)}/>
 
                 </Col>
                 {/*右边栏*/}

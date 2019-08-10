@@ -15,7 +15,7 @@ export default class FLink extends Component {
                 <li><a href="https://github.com/chenliang15405">Github</a></li>
                 <li><a href="https://blog.csdn.net/weixin_42054155">CSDN</a></li>
                 <li><a href="https://www.jianshu.com/u/e699f2ee5224">简书</a></li>
-                <li><a href="https://github.com/chenliang15405">个人博客</a></li>
+                <li><a href="http://localhost:3000">个人博客</a></li>
             </ul>
         </Card>
 
