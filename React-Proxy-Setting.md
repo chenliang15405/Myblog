@@ -1,7 +1,8 @@
 ---
 ---
 ### React 配置跨域有两种方式：
-> 1. 在package.json中配置
+
+> 1. 在package.json中配置（打包之后直接使用npm serve启动react，才生效）
 ```
  "proxy":{ 
     "/api": {
@@ -15,7 +16,8 @@
   }
 ```
 
-> 2.是react-created-app创建的项目，可以使用http-proxy-middleware配置
+> 2.是react-created-app创建的项目，可以使用http-proxy-middleware配置（打包之后直接使用npm serve启动react, 才生效）
+
 ```
 npm install http-proxy-middleware --save
 // or
@@ -43,5 +45,22 @@ axios.defaults.baseURL = '/api';
 ```
 
 
+>3. 如果是直接打包放入到Nginx中使用，则通过nginx.conf配置代理
 
->3. 或者可以通过 npm run eject 弹出 webpack配置文件
+(1) 直接防止在nginx的根目录中：
+```
+location / {
+    root /server/nginx/html/;
+    index index.html index.htm;
+}
+```
+
+(2) 将react项目作为nginx的根目录下的子目录进行访问   
+  1. 配置router的路径   
+  
+  2. package.json中配置homepage   
+  3. 使用打包命令   
+  4. 配置nginx.conf
+
+多环境打包：
+https://www.jianshu.com/p/b24154123852

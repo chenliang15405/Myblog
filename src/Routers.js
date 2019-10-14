@@ -6,13 +6,18 @@ import Home from './pages/home/Home'
 import Archive from './pages/archive/Archive'
 import Blog from './pages/blog/Blog'
 
+
+const routerConfig = !process.env.REACT_APP_ROUTER_BASE_NAME ? {} : {
+    basename:process.env.REACT_APP_ROUTER_BASE_NAME
+};
+
 export default class Routers extends Component {
 
     render() {
 
       return (
-        // /*<HashRouter basename='/blog'>*/  可能需要
-            <HashRouter>
+        // /*<HashRouter basename='/blog'>*/  可能需要    <HashRouter>
+            <HashRouter {...routerConfig}>
                 <App>
                     <Switch>
                         <Route exact path='/' component={Home}/>

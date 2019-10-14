@@ -8,7 +8,7 @@ export default class Footer extends Component {
     render(){
         return (
             <footer>
-                <p>Design by 个人主页</p>
+                <p>Design by 唐宋个人主页</p>
             </footer>
         )
     }
