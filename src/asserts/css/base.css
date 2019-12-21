@@ -95,6 +95,11 @@ a:hover {
     position: relative;
 }
 
+.footer a {
+    color: #a5a4a4;
+    text-shadow: none;
+}
+
 /*
 .bg {
     background: url(https://uploadbeta.com/api/pictures/random/?key=BingEverydayWallpaperPicture);
