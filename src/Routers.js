@@ -6,7 +6,7 @@ import Home from './pages/home/Home'
 import Archive from './pages/archive/Archive'
 import Blog from './pages/blog/Blog'
 
-
+console.log('REACT_APP_ROUTER_BASE_NAME: ', process.env.REACT_APP_ROUTER_BASE_NAME)
 const routerConfig = !process.env.REACT_APP_ROUTER_BASE_NAME ? {} : {
     basename:process.env.REACT_APP_ROUTER_BASE_NAME
 };
