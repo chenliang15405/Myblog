@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { message } from 'antd'
 
 
 //创建axios实例

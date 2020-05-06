@@ -9,7 +9,8 @@
    例如：   
    `"homepage": "http://132.232.104.247/blog" `   
    其中ip是服务器的ip或者域名，blog为项目的部署在nginx中的子目录   
-   如果是本地，可以指定为`"homepage": "." `   
+   如果是本地，可以指定为`"homepage": "." `
+   TODO homepage: './' 表示相对路径 是否可以？   
    
 **3. 并且在index.html中引入的js和css、图片等都需要使用相对路径，使用绝对路径找不到**
 
@@ -46,6 +47,7 @@
   	
   （2） 如果是配置在环境配置文件中   
   TODO 如何配置
+  .env 或者.env.production??
   
   
 **6. nginx.conf配置**

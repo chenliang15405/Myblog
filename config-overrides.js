@@ -15,13 +15,15 @@ function resolve(dir) {
 const {
     override,
     addWebpackPlugin,
-    addWebpackAlias
+    addWebpackAlias,
+    fixBabelImports
 } = require("customize-cra")
 
 const UglifyJsPlugin = require('uglifyjs-webpack-plugin')
 const CompressionPlugin = require("compression-webpack-plugin")
-// const HtmlWebpackPlugin = require('html-webpack-plugin')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const HtmlWebpackPlugin = require('html-webpack-plugin')
+// const ExtractTextPlugin = require('extract-text-webpack-plugin')
+const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 
 const rewiredMap = () => config => {
     config.devtool = config.mode === 'development' ? 'cheap-module-source-map' : false;
@@ -66,23 +68,28 @@ const myPlugin = [
         threshold: 10240,//只处理比这个值大的资源。按字节计算
         minRatio: 0.8//只有压缩率比这个值小的资源才会被处理
     }),
-    // new HtmlWebpackPlugin({
-    //     title: '',
-    //     template: 'public/index.html',
-    //     minify: {
-    //         removeComments: true, // 移除HTML中的注释
-    //         collapseWhitespace: true, // 删除空白符与换行符
-    //         useShortDoctype: true,
-    //         removeEmptyAttributes: true,
-    //         removeStyleLinkTypeAttributes: true,
-    //         keepClosingSlash: true,
-    //         minifyJS: true,
-    //         minifyCSS: true,
-    //         minifyURLs: true,
-    //     },
-    //     chunksSortMode:'dependency'
-    // }),
-    new ExtractTextPlugin('static/css/styles.[contenthash].css'),
+    new HtmlWebpackPlugin({
+        title: '',
+        template: path.resolve(path.resolve(__dirname), 'public/index.html'),
+        filename: 'index.html',
+        minify: {
+            removeComments: true, // 移除HTML中的注释
+            collapseWhitespace: true, // 删除空白符与换行符
+            useShortDoctype: true,
+            removeEmptyAttributes: true,
+            minifyJS: true,
+            minifyCSS: true,
+            minifyURLs: true,
+        },
+        inject: 'body'
+    }),
+    // 该插件的主要是为了抽离 css 样式,防止将样式打包在 js 中文件过大和因为文件大网络请求超时的情况
+    //new ExtractTextPlugin('static/css/styles.[md5:contenthash:hex:8].css')  // 因为使用路由按需加载，所以需要配置这个contenthash
+    // webpack 4.0之后使用MiniCssExtractPlugin, 之前使用ExtractTextPlugin
+    new MiniCssExtractPlugin({
+        filename:"static/css/[name].css", //输出的css文件名，默认以入口文件名命名(例如main.css)
+        chunkFilename: "static/css/[id].css"
+    })
 ]
 
 
@@ -96,9 +103,16 @@ module.exports = override(
     // 生产环境去除console.*
     dropConsole(),
 
+    fixBabelImports('import', { //配置按需加载
+        libraryName: 'antd',
+        libraryDirectory: 'es',
+        style: true,
+    }),
+
+
     // 配置 webpack plugin
     (config) => {
-        if(process.env.NODE_ENV === 'development') {
+        if(process.env.NODE_ENV !== 'development') {
             config.plugins = [...config.plugins, ...myPlugin]
         }
         //1.修改、添加loader 配置 :
