@@ -7,6 +7,7 @@ $news-container:260px;
 
 .container {
   width: $info-container-width;
+  display: flex;
   margin: 50px auto;
   font-family: Chinese Quote,-apple-system,BlinkMacSystemFont,Segoe UI,PingFang SC,Hiragino Sans GB,Microsoft YaHei,Helvetica Neue,Helvetica,Arial,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol;
   color: rgba(0,0,0,.65);
@@ -17,7 +18,8 @@ $news-container:260px;
   //margin: 0 auto;
 }
 .info {
-  padding: 24px;
+  padding: 30px;
+  word-break: break-word;
 }
 .info h3 {
   font-size: 22px;
@@ -63,10 +65,10 @@ $news-container:260px;
 //news-container
 .news-container {
   width: $news-container;
-  margin-left: 30px;
-  position: absolute;
-  top: 0;
-  right: -20px;
+  margin-left: 10px;
+  //position: absolute;
+  //top: 0;
+  //right: -20px;
 }
 .news-container .news-card {
   width: 100%;
@@ -237,8 +239,7 @@ $news-container:260px;
 .great-but {
   width: 90px;
   height: 36px;
-  background: #3690FC;
-  border: 1px solid #3690cf;
+  background: #ccc;
   border-radius: 3px;
   cursor: pointer;
   line-height: 36px;
@@ -246,10 +247,18 @@ $news-container:260px;
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-right: 10px;
+  margin-right: 23px;
   .word {
     color: #fff;
   }
+  .great {
+    color: #fff;
+    font-size: 18px;
+  }
+}
+.great-but-change {
+  background: #3690FC;
+  border: 1px solid #3690cf;
   .great {
     color: #fff;
     font-size: 18px;
@@ -291,16 +300,15 @@ $news-container:260px;
     p {
       margin: 0;
     }
-    span {
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
+    //span {
+    //  white-space: nowrap;
+    //  overflow: hidden;
+    //  text-overflow: ellipsis;
+    //}
     .previous{
       width: 50%;
       text-align: center;
       color: #333;
-      font-size: 16px;
       border-right: 1px solid #ddd;
     }
     .next {

@@ -4,18 +4,19 @@
 $main-width: 1000px;
 
 header {
-  width: $main-width;
+  width: 70%;
   overflow: hidden;
   margin: 0 auto !important;
 }
 
 .headerImgBox {
-  width: $main-width;
   margin-top: 10px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+  flex-wrap: wrap;
   span {
+    margin-top: 10px;
     font-size: 25px;
     color: #ff8600;
     font-weight: 500;

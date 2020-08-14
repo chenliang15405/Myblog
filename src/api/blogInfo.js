@@ -12,6 +12,12 @@ export const getBlogContent = (id) => {
   })
 }
 
+export const starArticle = (blogId) => {
+    return fetch({
+        url: `/article/article/thumbup/${blogId}`,
+        method: 'get'
+    })
+}
 
 /*
 * // 1根据订单id获取订单信息

@@ -6,6 +6,7 @@ import moment from 'moment'
 import ReplyArea from './ReplyArea'
 
 import { createComment, getCommentsList, favoriteComment } from '../api/comment'
+import { starArticle } from '../api/blogInfo'
 import { getLabelListByBlogId } from '../api/tag'
 
 const Option = Select.Option;
@@ -49,7 +50,23 @@ const Editor = ({
     </div>
 );
 
-
+/**
+ * 防抖函数
+ * @param func 需要执行的函数
+ * @param wait 防抖时间
+ * @returns {Function}
+ */
+function debounce(func, wait=200) {
+    let timeout;  // 定时器变量
+    return function(event){
+        clearTimeout(timeout);  // 每次触发时先清除上一次的定时器,然后重新计时
+        event.persist && event.persist()   //保留对事件的引用
+        //const event = e && {...e}   //深拷贝事件对象
+        timeout = setTimeout(()=>{
+            func(event)
+        }, wait);  // 指定 xx ms 后触发真正想进行的操作 handler
+    };
+}
 
 /**
  * blog info footer
@@ -75,10 +92,10 @@ export default class BlogInfoFooter extends Component {
             dislikes: 0,
             action: null,
             showReplyInput: false,
-            showReplyInputId: ''
+            showReplyInputId: '',
+            stared: props.isStar
         }
     }
-
 
     componentWillMount() {
        // 获取标签列表
@@ -86,6 +103,15 @@ export default class BlogInfoFooter extends Component {
 
       // 获取评论列表
       this.getCommentsList()
+    }
+
+    // 接收父组件异步传递参数
+    componentWillReceiveProps(nextProps){
+        if(nextProps.isStar !== this.state.stared) {
+            this.setState({
+                stared: nextProps.isStar
+            })
+        }
     }
 
 
@@ -172,7 +198,7 @@ export default class BlogInfoFooter extends Component {
         })
     }
 
-    // 点赞
+    // 点赞评论
     like = async (id) => {
       // 点赞会将 action、id 、 ip 保存到redis里即保证了不重复点赞和动作，然后点赞次数+1到数据库，mq发送消息通知博主
       const resp = await favoriteComment(id, 'like')
@@ -183,7 +209,7 @@ export default class BlogInfoFooter extends Component {
       }
     }
 
-    // 取消点赞
+    // 取消点赞评论
     dislike = async (id) => {
       const resp = await favoriteComment(id, 'dislike')
       if(resp.code === 20000) {
@@ -192,6 +218,25 @@ export default class BlogInfoFooter extends Component {
         message.success(resp.message);
       }
     }
+
+    // 点赞文章
+    // 使用防抖函数，防止重复点击
+    star = debounce((blogId) => {
+        this.starGo(blogId)
+    })
+
+    starGo = async (blogId) => {
+        const resp = await starArticle(blogId);
+        console.log(resp)
+        if(resp.code === 20000) {
+            message.success('赞👍～')
+        } else if(resp.code === 20005) {
+            message.success("已经点过赞啦～")
+        } else {
+            message.error("服务器炸了！！！")
+        }
+    }
+
 
     reply = (id) => {
       this.setState({
@@ -207,7 +252,7 @@ export default class BlogInfoFooter extends Component {
 
 
     render() {
-        const { submitting, commentValue, commentList, commentTotalNum, showReplyInput, showReplyInputId} = this.state;
+        const { blogId, stared, submitting, commentValue, commentList, commentTotalNum, showReplyInput, showReplyInputId} = this.state;
 
         /*TODO react中最好不要直接在onClick={this.like} 这样绑定方法，否则会在加载时触发，最好使用箭头函数 onClick={()=>{this.like}}*/
         const actions = (id, likes, dislikes, action) => [
@@ -307,7 +352,7 @@ export default class BlogInfoFooter extends Component {
                         </div>
                     </Col>
                     <Col className='great-pay-box'>
-                        <div className='great-but'>
+                        <div className={[`great-but ${stared ? 'great-but-change' : ''}`]} onClick={() => this.star(blogId)}>
                             <i className='iconfont great'>&#xe676;</i>
                             <span className='word'>  Start(10)</span>
                         </div>

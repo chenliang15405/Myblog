@@ -71,6 +71,8 @@ export default class Archive extends Component {
     loadDataWithScroll = (isBottom) => {
         let { data, archive, hasMore } = this.state
         if(isBottom){
+            // TODO 防抖函数，防止无限加载
+
             this.setState({
                 loading: true,
             });

@@ -315,8 +315,8 @@ export default class Home extends Component {
                             defaultCurrent={this.state.page}
                             defaultPageSize={this.state.pageSize}
                             total={this.state.total}
-                            hideOnSinglePage={true} //指定只有1页时是否隐藏分页条
-                            onChange={(page)=>this.pageChange(page)}
+                            hideOnSinglePage={true}  // 指定只有1页时是否隐藏分页条
+                            onChange={(page) => this.pageChange(page)}
                             showQuickJumper
                             className='pagination'
                         />

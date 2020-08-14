@@ -1,6 +1,6 @@
 import React, {Component} from 'react';
 import {HashRouter as Router} from 'react-router-dom';
-import { LocaleProvider } from 'antd'
+import { ConfigProvider } from 'antd'
 import en from 'antd/lib/locale-provider/en_US';
 // import zh_CN from 'antd/lib/locale-provider/zh_CN';
 import moment from 'moment';
@@ -8,6 +8,8 @@ import 'moment/locale/zh-cn';
 
 import Header from './components/Header'
 import Footer from './components/Footer'
+
+import './asserts/css/app.scss'
 
 moment.locale('en');
 
@@ -35,7 +37,7 @@ class App extends Component {
         return (
             <Router>
                 {/*TODO 国际化以及其他的语言*/}
-                <LocaleProvider locale={this.state.locale ? this.state.locale : en}>
+                <ConfigProvider locale={this.state.locale ? this.state.locale : en}>
                     <div className="bg" id="bg">
                         <div>
                             <Header/>
@@ -53,7 +55,7 @@ class App extends Component {
                         </article>
                         <Footer/>
                     </div>
-                </LocaleProvider>
+                </ConfigProvider>
             </Router>
         );
     }

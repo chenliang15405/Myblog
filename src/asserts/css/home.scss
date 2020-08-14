@@ -10,7 +10,7 @@ $right-box-width: 68%;
   padding: 0;
 }
 .main-container {
-  width: $main-width;
+  width: 75%;
   margin: 0 auto;
   margin-top: 30px;
   display: flex;
@@ -310,13 +310,13 @@ $right-box-width: 68%;
 }
 .pagination {
   position: absolute;
+  width: 100%;
   left: 50%;
   -webkit-transform: translate(-50%,50px);
   -moz-transform: translate(-50%,50px);
   -ms-transform: translate(-50%,50px);
   -o-transform: translate(-50%,50px);
   transform: translate(-50%,50px);
-  width: 500px;
 }
 
 .blog-read-count {
@@ -331,7 +331,7 @@ $right-box-width: 68%;
   position: fixed;
   right: 50px;
   bottom: 180pt;
-  width: 95px;
+  z-index: 999;
 }
 .slide-bar li {
   width: 3pc;

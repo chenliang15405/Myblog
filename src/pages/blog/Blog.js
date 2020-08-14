@@ -52,13 +52,14 @@ export default class Blog extends Component {
         // 获取数据
         getBlogContent(id)
             .then(response => {
+                console.log("resp" , response)
                 if(response.code === 20000) {
                     const data = response.data
                     //设置页面的title
                     document.title = data.title
                     // console.log("data",data)
                     this.setState({
-                      content: data
+                        content: data
                     })
                   }
             })
@@ -71,6 +72,7 @@ export default class Blog extends Component {
 
     render() {
         const {content} = this.state;
+        console.log(content.stared)
         return (
             <Row className='container'>
                 {/*左边blog内容*/}
@@ -117,7 +119,7 @@ export default class Blog extends Component {
                     </Card>
                     
                     {/*博客footer*/}
-                    <BlogInfoFooter blogId={this.state.blogId} createDate={TimetransferDetail(content.updatetime)}/>
+                    <BlogInfoFooter blogId={this.state.blogId} isStar={this.state.content.stared} createDate={TimetransferDetail(content.updatetime)}/>
 
                 </Col>
                 {/*右边栏*/}
